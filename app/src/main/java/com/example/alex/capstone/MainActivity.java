@@ -25,9 +25,6 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
 
-        Intent i = new Intent(this, LoginActivity.class);
-        startActivity(i);
-
         if (account== null || !readFromPreferences()){
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
