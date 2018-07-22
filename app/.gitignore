@@ -1,1 +1,4 @@
 /build
+/credentials.json
+/src/main/res/values/secrets.xml
+

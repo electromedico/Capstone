@@ -2,23 +2,17 @@
     <string name="app_name">Capstone</string>
     <string name="title_activity_login">Sign in</string>
 
-    <!-- Strings related to login -->
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password (optional)</string>
-    <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_field_required">This field is required</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
-        completions."
-    </string>
-
-    <string name="default_web_client_id">1086876850819-8rin2pjuprdmv4dn3ject27o28b1q60g.apps.googleusercontent.com</string>
-    <string name="log_in_successful">Log in Successfull</string>
+    <string name="log_in_successful">Log in Successful</string>
     <string name="not_now">Skip Sing In</string>
-    <string name="not_loged">not_loged</string>
+    <string name="not_logged">not_logged</string>
     <string name="log_in_failed">Log in Failed</string>
     <string name="please_try_again">please try again later</string>
+    <string name="title_activity_map">Map</string>
+    <string name="go">GO</string>
+    <string name="favorites">Favorites</string>
+    <string name="line_map">Line Map</string>
+    <string name="menu_icon">Menu Icon</string>
+    <string name="start_navigation_icon">Start Navigation Icon</string>
+    <string name="line_map_icon">Line Map Icon</string>
+    <string name="favorites_icon">Favorites icon</string>
 </resources>

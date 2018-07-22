@@ -1,4 +1,4 @@
 # Capstone
-Capstone project for udacity android developer nanodegree
+Capstone project for Udacity android developer Nanodegree
 
 Work in Progress 

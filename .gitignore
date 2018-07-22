@@ -8,3 +8,4 @@
 /build
 /captures
 .externalNativeBuild
+/my-release-key.jks

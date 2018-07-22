@@ -4,4 +4,10 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
 
     <dimen name="p50">0.5</dimen>
+    <dimen name="search_bar_margin">8dp</dimen>
+    <dimen name="_search_bar_padding">8dp</dimen>
+    <dimen name="dp8">8dp</dimen>
+
+    <item name="match_parent" type="dimen">-1</item>
+    <item name="wrap_content" type="dimen">-2</item>
 </resources>

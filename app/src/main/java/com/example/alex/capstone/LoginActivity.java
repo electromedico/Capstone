@@ -102,9 +102,9 @@ public class LoginActivity extends AppCompatActivity{
             try {
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = task.getResult(ApiException.class);
-                Snackbar  snackbar = Snackbar.make(findViewById(android.R.id.content),getString(R.string.log_in_successful),Snackbar.LENGTH_LONG);
-                snackbar.show();
-
+                //Message Log in Successful
+                showSnackBar(getString(R.string.log_in_successful));
+                //Write to preferences the choice
                 writeToPreferencesSkipLogIn(false);
 
 
@@ -114,11 +114,7 @@ public class LoginActivity extends AppCompatActivity{
                 Log.w(TAG, getString(R.string.log_in_failed)+" code: " + e.getStatusCode());
 
                 //Message Sign in Failed
-                Snackbar  snackbar = Snackbar.make(
-                        findViewById(android.R.id.content),
-                        getString(R.string.log_in_failed)+" "+ getString(R.string.please_try_again),
-                        Snackbar.LENGTH_LONG);
-                snackbar.show();
+               showSnackBar(getString(R.string.log_in_failed)+" "+ getString(R.string.please_try_again));
 
             }
             // in any case we Launch the Map activity
@@ -130,10 +126,11 @@ public class LoginActivity extends AppCompatActivity{
      * Method to save the choice
      * @param b the choice made by the user
      */
-    public void writeToPreferencesSkipLogIn(boolean b){
+    private void writeToPreferencesSkipLogIn(boolean b){
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putBoolean(getString(R.string.not_loged), b);
+        editor.putBoolean(getString(R.string.not_logged), b);
+        editor.apply();
     }
 
     /**
@@ -142,6 +139,12 @@ public class LoginActivity extends AppCompatActivity{
     private void startMapActivity(){
         Intent intent = new Intent(this,MapActivity.class);
         startActivity(intent);
+    }
+
+    private void showSnackBar(String msg){
+        Snackbar  snackbar = Snackbar.make(findViewById(android.R.id.content),msg,Snackbar.LENGTH_LONG);
+        snackbar.show();
+
     }
 
 }

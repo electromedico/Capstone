@@ -3,7 +3,6 @@ package com.example.alex.capstone;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -25,7 +24,8 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
 
-        if (account== null || !readFromPreferences()){
+        //Test if the user already signed in or skipped the sign in
+        if (account== null && !readFromPreferences()){
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
         }
@@ -35,8 +35,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public boolean readFromPreferences(){
+    /**
+     *Read from the Shared preference to check if the user skipped the log in
+     * @return the value for not logged preference
+     */
+    private boolean readFromPreferences(){
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        return sharedPref.getBoolean(getString(R.string.not_loged),false);
+        return sharedPref.getBoolean(getString(R.string.not_logged),false);
     }
 }
