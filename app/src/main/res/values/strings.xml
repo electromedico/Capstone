@@ -15,4 +15,24 @@
     <string name="start_navigation_icon">Start Navigation Icon</string>
     <string name="line_map_icon">Line Map Icon</string>
     <string name="favorites_icon">Favorites icon</string>
+
+
+    <!--Strings for querying the API-->
+    <string name="display_destinations">displayDestinations</string>
+    <string name="display_destinations_value">1</string>
+    
+    <string name="display_coord_xy">displayCoordXY</string>
+    <string name="display_coord_xy_value">1</string>
+
+    <string name="bbox">bbox</string>
+    <string name="api_key_param">key</string>
+    <string name="on_response_excepion">getQuery or getQuery.Object() null</string>
+    <string name="retrofit_on_failure_log_tag">RetrofitOnFailure</string>
+    <string name="retrofit_on_response_log_tag">RetrofitOnResponse</string>
+
+    <!--JSON Keys-->
+    <string name="stop_json_key">stop</string>
+    <string name="route_planner_result_json_key">routePlannerResult</string>
+    <string name="stoppoint_json_key">stoppoint</string>
+
 </resources>
