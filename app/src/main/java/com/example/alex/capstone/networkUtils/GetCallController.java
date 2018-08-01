@@ -3,10 +3,15 @@ package com.example.alex.capstone.networkUtils;
 
 import android.content.Context;
 import android.util.Log;
+import android.webkit.WebView;
 
 import com.example.alex.capstone.R;
 import com.example.alex.capstone.model.GetQuery;
+import com.example.alex.capstone.model.GetStopPointsQuery;
+import com.example.alex.capstone.model.PhysicalStop;
+import com.example.alex.capstone.model.PhysicalStops;
 import com.example.alex.capstone.utils.ModelUtilis;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.gson.Gson;
 
 import org.json.JSONException;
@@ -28,6 +33,10 @@ public class GetCallController implements Callback<ResponseBody> {
     private final String apiKey;
     private final TisseoAPI tisseoAPI;
     private final OnTaskCompleted listener;
+    private int serviceCalled;
+    private static final int GET_NEARBY_STOPS_TAG = 100;
+    Gson gson;
+
 
     public GetCallController (Context c, OnTaskCompleted listener) {
         context=c;
@@ -35,13 +44,21 @@ public class GetCallController implements Callback<ResponseBody> {
         Retrofit client = TisseoApiClient.getClient();
         tisseoAPI= client.create(TisseoAPI.class);
         this.listener=listener;
+        gson = new Gson();
 
     }
 
     /**
      *method to call getNearbyStops
      */
-    public void startGetNearbyStops(String coordinates){
+    public void startGetNearbyStops(LatLngBounds latLngBounds){
+        String coordinates= latLngBounds.southwest.longitude
+                +","+latLngBounds.southwest.latitude
+                +","+latLngBounds.northeast.longitude
+                +","+latLngBounds.northeast.latitude;
+        serviceCalled= GET_NEARBY_STOPS_TAG;
+
+        //Map for the query parameters
         Map<String,String> parameters = new HashMap<>();
 
         //Display coordinates
@@ -69,30 +86,25 @@ public class GetCallController implements Callback<ResponseBody> {
 
     @Override
     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
+        //test response
         if (response.isSuccessful()) {
+
             try {
+                switch (serviceCalled){
 
-                //utility method to adapt the JSON string form the API to the model
-                JSONObject jsonObject=ModelUtilis.changeStopToStoppoint(response.body().string(),context);
+                    case GET_NEARBY_STOPS_TAG:
+                        getStopPointsQueryTreatment(response.body().string());
+                        break;
 
-                Gson gson = new Gson();
-                GetQuery getQuery = gson.fromJson(jsonObject.toString(),GetQuery.class);
 
-                if (getQuery!= null && getQuery.object!= null){
+                    default:
+                        break;
 
-                    listener.onTaskCompleted(getQuery.object);
                 }
-                else {
-                    IOException e = new IOException(context.getString(R.string.on_response_excepion));
-                }
-
-
             } catch (IOException e) {
                 Log.d(context.getString(R.string.retrofit_on_response_log_tag), e.getMessage());
-            } catch (JSONException e) {
-                e.printStackTrace();
             }
+
 
         }
     }
@@ -100,6 +112,22 @@ public class GetCallController implements Callback<ResponseBody> {
     @Override
     public void onFailure(Call<ResponseBody> call, Throwable t) {
         Log.d(context.getString(R.string.retrofit_on_failure_log_tag), t.getMessage());
+
+    }
+
+    //Method to treat the getStopPoints response
+    private void getStopPointsQueryTreatment(String json) throws IOException {
+
+        GetStopPointsQuery getStopPointsQuery = gson.fromJson(json, GetStopPointsQuery.class);
+
+        //Response content verification
+        if (getStopPointsQuery!= null && getStopPointsQuery.getPhysicalStops() != null) {
+            //we pass to the listner the list of stops
+            listener.onTaskCompletedGetNearbyStops(getStopPointsQuery.getPhysicalStops());
+        }
+        else {
+            throw (new IOException(context.getString(R.string.on_response_excepion)));
+        }
 
     }
 

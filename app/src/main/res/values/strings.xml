@@ -34,5 +34,6 @@
     <string name="stop_json_key">stop</string>
     <string name="route_planner_result_json_key">routePlannerResult</string>
     <string name="stoppoint_json_key">stoppoint</string>
+    <string name="service_get_nearby_stops">ServiceNearbyStops</string>
 
 </resources>

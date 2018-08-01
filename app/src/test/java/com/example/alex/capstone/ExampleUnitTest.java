@@ -1,5 +1,9 @@
 package com.example.alex.capstone;
 
+import com.example.alex.capstone.utils.LatLongUtils;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -11,7 +15,9 @@ import static org.junit.Assert.*;
  */
 public class ExampleUnitTest {
     @Test
-    public void addition_isCorrect() {
-        assertEquals(4, 2 + 2);
+    public void calculateBondingBox_iscorrect() {
+        LatLng l1 = new LatLng(1.457652,43.630826);
+        LatLngBounds latLngBounds = LatLongUtils.calculateBondingBox(l1);
+        assert true;
     }
 }
