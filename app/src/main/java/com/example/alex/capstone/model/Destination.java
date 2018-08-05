@@ -4,15 +4,26 @@ package com.example.alex.capstone.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.Parcelable.Creator;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 public class Destination implements Parcelable
 {
 
-    public String cityName;
-    public String id;
-    public String name;
-    public final static Parcelable.Creator<Destination> CREATOR = new Creator<Destination>() {
+    @SerializedName("cityId")
+    @Expose
+    private String cityId;
+    @SerializedName("cityName")
+    @Expose
+    private String cityName;
+    @SerializedName("id")
+    @Expose
+    private String id;
+    @SerializedName("name")
+    @Expose
+    private String name;
 
+    public final static Parcelable.Creator<Destination> CREATOR = new Creator<Destination>() {
 
         @SuppressWarnings({
             "unchecked"
@@ -29,18 +40,86 @@ public class Destination implements Parcelable
     ;
 
     protected Destination(Parcel in) {
+        this.cityId = ((String) in.readValue((String.class.getClassLoader())));
         this.cityName = ((String) in.readValue((String.class.getClassLoader())));
         this.id = ((String) in.readValue((String.class.getClassLoader())));
         this.name = ((String) in.readValue((String.class.getClassLoader())));
     }
 
+    /**
+     * No args constructor for use in serialization
+     * 
+     */
     public Destination() {
     }
 
+    /**
+     * 
+     * @param id
+     * @param name
+     * @param cityName
+     */
+    public Destination(String cityName, String id, String name) {
+        super();
+        this.cityName = cityName;
+        this.id = id;
+        this.name = name;
+    }
+
+    /**
+     *
+     * @param id
+     * @param cityId
+     * @param name
+     * @param cityName
+     */
+    public Destination(String cityId, String cityName, String id, String name) {
+        super();
+        this.cityId = cityId;
+        this.cityName = cityName;
+        this.id = id;
+        this.name = name;
+    }
+
+
+    public String getCityName() {
+        return cityName;
+    }
+
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getCityId() {
+        return cityId;
+    }
+
+    public void setCityId(String cityId) {
+        this.cityId = cityId;
+    }
+
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(cityId);
         dest.writeValue(cityName);
         dest.writeValue(id);
         dest.writeValue(name);
+
     }
 
     public int describeContents() {

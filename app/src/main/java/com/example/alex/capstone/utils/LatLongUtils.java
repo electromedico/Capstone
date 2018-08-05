@@ -6,12 +6,14 @@ import com.google.maps.android.SphericalUtil;
 
 
 public class LatLongUtils{
-    static double RADIUS_METERS =1000;
+    public static double RADIUS_METERS_OUTER_BOX =500;
+    public static double RADIUS_METERS_INNER_BOX =500;
+    public static double RADIUS_METERS_ZOOM =100;
 
 
-    public static LatLngBounds calculateBondingBox(LatLng center){
+    public static LatLngBounds calculateBoundingBox(Double radius, LatLng center){
 
-        double distanceFromCenterToCorner = RADIUS_METERS * Math.sqrt(2.0);
+        double distanceFromCenterToCorner = radius * Math.sqrt(2.0);
         LatLng southwestCorner =
                 SphericalUtil.computeOffset(center, distanceFromCenterToCorner, 225.0);
         LatLng northeastCorner =

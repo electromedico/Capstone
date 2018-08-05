@@ -4,12 +4,18 @@ package com.example.alex.capstone.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.Parcelable.Creator;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 public class OperatorCode_ implements Parcelable
 {
 
-    public String network;
-    public String value;
+    @SerializedName("network")
+    @Expose
+    private String network;
+    @SerializedName("value")
+    @Expose
+    private String value;
     public final static Parcelable.Creator<OperatorCode_> CREATOR = new Creator<OperatorCode_>() {
 
 
@@ -32,7 +38,38 @@ public class OperatorCode_ implements Parcelable
         this.value = ((String) in.readValue((String.class.getClassLoader())));
     }
 
+    /**
+     * No args constructor for use in serialization
+     * 
+     */
     public OperatorCode_() {
+    }
+
+    /**
+     * 
+     * @param value
+     * @param network
+     */
+    public OperatorCode_(String network, String value) {
+        super();
+        this.network = network;
+        this.value = value;
+    }
+
+    public String getNetwork() {
+        return network;
+    }
+
+    public void setNetwork(String network) {
+        this.network = network;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
     }
 
     public void writeToParcel(Parcel dest, int flags) {

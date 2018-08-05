@@ -4,11 +4,21 @@ package com.example.alex.capstone.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.Parcelable.Creator;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 public class Journey implements Parcelable
 {
 
-    public Journey_ journey;
+    @SerializedName("dateTime")
+    @Expose
+    private String dateTime;
+    @SerializedName("realTime")
+    @Expose
+    private String realTime;
+    @SerializedName("waiting_time")
+    @Expose
+    private String waitingTime;
     public final static Parcelable.Creator<Journey> CREATOR = new Creator<Journey>() {
 
 
@@ -27,14 +37,59 @@ public class Journey implements Parcelable
     ;
 
     protected Journey(Parcel in) {
-        this.journey = ((Journey_) in.readValue((Journey_.class.getClassLoader())));
+        this.dateTime = ((String) in.readValue((String.class.getClassLoader())));
+        this.realTime = ((String) in.readValue((String.class.getClassLoader())));
+        this.waitingTime = ((String) in.readValue((String.class.getClassLoader())));
     }
 
+    /**
+     * No args constructor for use in serialization
+     * 
+     */
     public Journey() {
     }
 
+    /**
+     * 
+     * @param realTime
+     * @param waitingTime
+     * @param dateTime
+     */
+    public Journey(String dateTime, String realTime, String waitingTime) {
+        super();
+        this.dateTime = dateTime;
+        this.realTime = realTime;
+        this.waitingTime = waitingTime;
+    }
+
+    public String getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(String dateTime) {
+        this.dateTime = dateTime;
+    }
+
+    public String getRealTime() {
+        return realTime;
+    }
+
+    public void setRealTime(String realTime) {
+        this.realTime = realTime;
+    }
+
+    public String getWaitingTime() {
+        return waitingTime;
+    }
+
+    public void setWaitingTime(String waitingTime) {
+        this.waitingTime = waitingTime;
+    }
+
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeValue(journey);
+        dest.writeValue(dateTime);
+        dest.writeValue(realTime);
+        dest.writeValue(waitingTime);
     }
 
     public int describeContents() {

@@ -1,23 +1,44 @@
 
 package com.example.alex.capstone.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.Parcelable.Creator;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 public class PhysicalStop implements Parcelable
 {
 
-    public List<Destination> destinations = null;
-    public String handicappedCompliance;
-    public String id;
-    public List<Line> lines = null;
-    public String name;
-    public List<OperatorCode> operatorCodes = null;
-    public StopArea stopArea;
-    public String x;
-    public String y;
+    @SerializedName("destinations")
+    @Expose
+    private List<Destination> destinations = new ArrayList<>();
+    @SerializedName("handicappedCompliance")
+    @Expose
+    private String handicappedCompliance;
+    @SerializedName("id")
+    @Expose
+    private String id;
+    @SerializedName("lines")
+    @Expose
+    private List<Line> lines = new ArrayList<>();
+    @SerializedName("name")
+    @Expose
+    private String name;
+    @SerializedName("operatorCodes")
+    @Expose
+    private List<OperatorCode> operatorCodes = new ArrayList<>();
+    @SerializedName("stopArea")
+    @Expose
+    private StopArea stopArea;
+    @SerializedName("x")
+    @Expose
+    private String x;
+    @SerializedName("y")
+    @Expose
+    private String y;
     public final static Parcelable.Creator<PhysicalStop> CREATOR = new Creator<PhysicalStop>() {
 
 
@@ -47,7 +68,108 @@ public class PhysicalStop implements Parcelable
         this.y = ((String) in.readValue((String.class.getClassLoader())));
     }
 
+    /**
+     * No args constructor for use in serialization
+     * 
+     */
     public PhysicalStop() {
+    }
+
+    /**
+     * 
+     * @param id
+     * @param handicappedCompliance
+     * @param destinations
+     * @param operatorCodes
+     * @param stopArea
+     * @param name
+     * @param lines
+     * @param y
+     * @param x
+     */
+    public PhysicalStop(List<Destination> destinations, String handicappedCompliance, String id, List<Line> lines, String name, List<OperatorCode> operatorCodes, StopArea stopArea, String x, String y) {
+        super();
+        this.destinations = destinations;
+        this.handicappedCompliance = handicappedCompliance;
+        this.id = id;
+        this.lines = lines;
+        this.name = name;
+        this.operatorCodes = operatorCodes;
+        this.stopArea = stopArea;
+        this.x = x;
+        this.y = y;
+    }
+
+    public List<Destination> getDestinations() {
+        return destinations;
+    }
+
+    public void setDestinations(List<Destination> destinations) {
+        this.destinations = destinations;
+    }
+
+    public String getHandicappedCompliance() {
+        return handicappedCompliance;
+    }
+
+    public void setHandicappedCompliance(String handicappedCompliance) {
+        this.handicappedCompliance = handicappedCompliance;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public List<Line> getLines() {
+        return lines;
+    }
+
+    public void setLines(List<Line> lines) {
+        this.lines = lines;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public List<OperatorCode> getOperatorCodes() {
+        return operatorCodes;
+    }
+
+    public void setOperatorCodes(List<OperatorCode> operatorCodes) {
+        this.operatorCodes = operatorCodes;
+    }
+
+    public StopArea getStopArea() {
+        return stopArea;
+    }
+
+    public void setStopArea(StopArea stopArea) {
+        this.stopArea = stopArea;
+    }
+
+    public String getX() {
+        return x;
+    }
+
+    public void setX(String x) {
+        this.x = x;
+    }
+
+    public String getY() {
+        return y;
+    }
+
+    public void setY(String y) {
+        this.y = y;
     }
 
     public void writeToParcel(Parcel dest, int flags) {

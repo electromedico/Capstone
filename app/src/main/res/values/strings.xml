@@ -15,12 +15,13 @@
     <string name="start_navigation_icon">Start Navigation Icon</string>
     <string name="line_map_icon">Line Map Icon</string>
     <string name="favorites_icon">Favorites icon</string>
+    <string name="lines">Lines : </string>
 
 
     <!--Strings for querying the API-->
     <string name="display_destinations">displayDestinations</string>
     <string name="display_destinations_value">1</string>
-    
+
     <string name="display_coord_xy">displayCoordXY</string>
     <string name="display_coord_xy_value">1</string>
 
@@ -35,5 +36,30 @@
     <string name="route_planner_result_json_key">routePlannerResult</string>
     <string name="stoppoint_json_key">stoppoint</string>
     <string name="service_get_nearby_stops">ServiceNearbyStops</string>
+    <string name="no_stops">There are no nearby Stops</string>
+    <string name="camera_key">camera_key</string>
+    <string name="list_physical_stops">list_physical_stops</string>
+    <string name="title_activity_navigation_maps">Directions</string>
+    <string name="title_activity_bus_stop_info_actitivy">BusStopInfoActitivy</string>
+    <string name="title_activity_bus_stop_info">BusStopInfoActivity</string>
+    <string name="stop_point_id">stopPointId</string>
+    <string name="time_table_by_area">timetableByArea</string>
+    <string name="param_time_table_by_area">1</string>
+    <string name="line_tv_label">Line</string>
+    <string name="direction_tv_tag">Direction</string>
+    <string name="waiting_time_tv_label">Waiting Time</string>
+    <string name="search_destination">Search Your Destination</string>
+    <string name="departure_place">departurePlaceXY</string>
+    <string name="arrival_place">arrivalPlaceXY</string>
+    <string name="number_results">number</string>
+    <string name="param_number_results">4</string>
+    <string name="display_wording">displayWording</string>
+    <string name="param_display_wording">1</string>
+    <string name="directions_lang">lang</string>
+    <string name="param_directions_lang">fr</string>
+    <string name="display_best_place">displayBestPlace</string>
+    <string name="param_display_best_place">1</string>
+    <string name="term">term</string>
+    <string name="suggestion_column">1</string>
 
 </resources>

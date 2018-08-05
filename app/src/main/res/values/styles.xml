@@ -7,13 +7,31 @@
         <item name="android:textColor">#FFFFFF</item>
     </style>
 
-    <style name="MapActivityTheme" parent="Theme.AppCompat.NoActionBar">
+    <style name="AppThemeActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+
+    <style name="MapActivityTheme" parent="AppTheme">
         <item name="android:textColor">@color/black</item>
         <item name="android:textColorHint">@color/black</item>
         <item name="android:editTextColor">@color/black</item>
     </style>
+
+    <style name="InfoWindowTheme" parent="AppTheme">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textColorHint">@color/black</item>
+        <item name="android:editTextColor">@color/black</item>
+        <item name="android:background">@color/white</item>
+        <item name="android:gravity">center</item>
+
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
 
 </resources>

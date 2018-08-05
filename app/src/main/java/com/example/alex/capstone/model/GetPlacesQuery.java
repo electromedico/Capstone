@@ -7,53 +7,53 @@ import android.os.Parcelable.Creator;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class GetStopPointsQuery implements Parcelable
+public class GetPlacesQuery implements Parcelable
 {
 
     @SerializedName("expirationDate")
     @Expose
     private String expirationDate;
-    @SerializedName("physicalStops")
+    @SerializedName("placesList")
     @Expose
-    private PhysicalStops physicalStops;
-    public final static Parcelable.Creator<GetStopPointsQuery> CREATOR = new Creator<GetStopPointsQuery>() {
+    private PlacesList placesList;
+    public final static Parcelable.Creator<GetPlacesQuery> CREATOR = new Creator<GetPlacesQuery>() {
 
 
         @SuppressWarnings({
             "unchecked"
         })
-        public GetStopPointsQuery createFromParcel(Parcel in) {
-            return new GetStopPointsQuery(in);
+        public GetPlacesQuery createFromParcel(Parcel in) {
+            return new GetPlacesQuery(in);
         }
 
-        public GetStopPointsQuery[] newArray(int size) {
-            return (new GetStopPointsQuery[size]);
+        public GetPlacesQuery[] newArray(int size) {
+            return (new GetPlacesQuery[size]);
         }
 
     }
     ;
 
-    protected GetStopPointsQuery(Parcel in) {
+    protected GetPlacesQuery(Parcel in) {
         this.expirationDate = ((String) in.readValue((String.class.getClassLoader())));
-        this.physicalStops = ((PhysicalStops) in.readValue((PhysicalStops.class.getClassLoader())));
+        this.placesList = ((PlacesList) in.readValue((PlacesList.class.getClassLoader())));
     }
 
     /**
      * No args constructor for use in serialization
      * 
      */
-    public GetStopPointsQuery() {
+    public GetPlacesQuery() {
     }
 
     /**
      * 
      * @param expirationDate
-     * @param physicalStops
+     * @param placesList
      */
-    public GetStopPointsQuery(String expirationDate, PhysicalStops physicalStops) {
+    public GetPlacesQuery(String expirationDate, PlacesList placesList) {
         super();
         this.expirationDate = expirationDate;
-        this.physicalStops = physicalStops;
+        this.placesList = placesList;
     }
 
     public String getExpirationDate() {
@@ -64,17 +64,17 @@ public class GetStopPointsQuery implements Parcelable
         this.expirationDate = expirationDate;
     }
 
-    public PhysicalStops getPhysicalStops() {
-        return physicalStops;
+    public PlacesList getPlacesList() {
+        return placesList;
     }
 
-    public void setPhysicalStops(PhysicalStops physicalStops) {
-        this.physicalStops = physicalStops;
+    public void setPlacesList(PlacesList placesList) {
+        this.placesList = placesList;
     }
 
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeValue(expirationDate);
-        dest.writeValue(physicalStops);
+        dest.writeValue(placesList);
     }
 
     public int describeContents() {

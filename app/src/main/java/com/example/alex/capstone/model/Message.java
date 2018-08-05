@@ -4,17 +4,33 @@ package com.example.alex.capstone.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.Parcelable.Creator;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 public class Message implements Parcelable
 {
 
-    public String content;
-    public String id;
-    public String importanceLevel;
-    public String scope;
-    public String title;
-    public String type;
-    public String url;
+    @SerializedName("content")
+    @Expose
+    private String content;
+    @SerializedName("id")
+    @Expose
+    private String id;
+    @SerializedName("importanceLevel")
+    @Expose
+    private String importanceLevel;
+    @SerializedName("scope")
+    @Expose
+    private String scope;
+    @SerializedName("title")
+    @Expose
+    private String title;
+    @SerializedName("type")
+    @Expose
+    private String type;
+    @SerializedName("url")
+    @Expose
+    private String url;
     public final static Parcelable.Creator<Message> CREATOR = new Creator<Message>() {
 
 
@@ -42,7 +58,88 @@ public class Message implements Parcelable
         this.url = ((String) in.readValue((String.class.getClassLoader())));
     }
 
+    /**
+     * No args constructor for use in serialization
+     * 
+     */
     public Message() {
+    }
+
+    /**
+     * 
+     * @param id
+     * @param content
+     * @param importanceLevel
+     * @param title
+     * @param scope
+     * @param type
+     * @param url
+     */
+    public Message(String content, String id, String importanceLevel, String scope, String title, String type, String url) {
+        super();
+        this.content = content;
+        this.id = id;
+        this.importanceLevel = importanceLevel;
+        this.scope = scope;
+        this.title = title;
+        this.type = type;
+        this.url = url;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getImportanceLevel() {
+        return importanceLevel;
+    }
+
+    public void setImportanceLevel(String importanceLevel) {
+        this.importanceLevel = importanceLevel;
+    }
+
+    public String getScope() {
+        return scope;
+    }
+
+    public void setScope(String scope) {
+        this.scope = scope;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public void writeToParcel(Parcel dest, int flags) {
