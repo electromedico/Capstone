@@ -1,17 +1,27 @@
 
-package com.example.alex.capstone.model;
+package com.example.alex.capstone.model.getJourneysQueryModel;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.Parcelable.Creator;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 public class Query implements Parcelable
 {
 
-    public String maxSolutions;
-    public Places places;
-    public String roadMode;
-    public TimeBounds timeBounds;
+    @SerializedName("maxSolutions")
+    @Expose
+    private String maxSolutions;
+    @SerializedName("places")
+    @Expose
+    private Places places;
+    @SerializedName("roadMode")
+    @Expose
+    private String roadMode;
+    @SerializedName("timeBounds")
+    @Expose
+    private TimeBounds timeBounds;
     public final static Parcelable.Creator<Query> CREATOR = new Creator<Query>() {
 
 
@@ -37,6 +47,38 @@ public class Query implements Parcelable
     }
 
     public Query() {
+    }
+
+    public String getMaxSolutions() {
+        return maxSolutions;
+    }
+
+    public void setMaxSolutions(String maxSolutions) {
+        this.maxSolutions = maxSolutions;
+    }
+
+    public Places getPlaces() {
+        return places;
+    }
+
+    public void setPlaces(Places places) {
+        this.places = places;
+    }
+
+    public String getRoadMode() {
+        return roadMode;
+    }
+
+    public void setRoadMode(String roadMode) {
+        this.roadMode = roadMode;
+    }
+
+    public TimeBounds getTimeBounds() {
+        return timeBounds;
+    }
+
+    public void setTimeBounds(TimeBounds timeBounds) {
+        this.timeBounds = timeBounds;
     }
 
     public void writeToParcel(Parcel dest, int flags) {

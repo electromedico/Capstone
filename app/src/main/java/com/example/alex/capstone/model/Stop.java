@@ -10,6 +10,9 @@ import com.google.gson.annotations.SerializedName;
 public class Stop implements Parcelable
 {
 
+    @SerializedName("handicappedCompliance")
+    @Expose
+    private String handicappedCompliance;
     @SerializedName("id")
     @Expose
     private String id;
@@ -19,10 +22,6 @@ public class Stop implements Parcelable
     @SerializedName("operatorCode")
     @Expose
     private String operatorCode;
-    @SerializedName("handicappedCompliance")
-    @Expose
-    private String handicappedCompliance;
-
     public final static Parcelable.Creator<Stop> CREATOR = new Creator<Stop>() {
 
 
@@ -47,41 +46,15 @@ public class Stop implements Parcelable
         this.operatorCode = ((String) in.readValue((String.class.getClassLoader())));
     }
 
-
-    /**
-     * No args constructor for use in serialization
-     * 
-     */
     public Stop() {
     }
 
-    /**
-     * 
-     * @param id
-     * @param operatorCode
-     * @param name
-     */
-    public Stop(String id, String name, String operatorCode) {
-        super();
-        this.id = id;
-        this.name = name;
-        this.operatorCode = operatorCode;
+    public String getHandicappedCompliance() {
+        return handicappedCompliance;
     }
 
-    /**
-     *
-     * @param id
-     * @param handicappedCompliance
-     * @param operatorCode
-     * @param name
-     */
-    public Stop(String handicappedCompliance, String id, String name, String operatorCode) {
-        super();
+    public void setHandicappedCompliance(String handicappedCompliance) {
         this.handicappedCompliance = handicappedCompliance;
-        this.id = id;
-        this.name = name;
-        this.operatorCode = operatorCode;
-
     }
 
     public String getId() {
@@ -109,10 +82,10 @@ public class Stop implements Parcelable
     }
 
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(handicappedCompliance);
         dest.writeValue(id);
         dest.writeValue(name);
         dest.writeValue(operatorCode);
-        dest.writeValue(handicappedCompliance);
     }
 
     public int describeContents() {

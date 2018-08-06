@@ -1,20 +1,21 @@
 
-package com.example.alex.capstone.model;
+package com.example.alex.capstone.model.getJourneysQueryModel;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.Parcelable.Creator;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 public class ConnectionPlace implements Parcelable
 {
 
-    public String city;
-    public String id;
-    public String latitude;
-    public String longitude;
-    public String name;
-    public String x;
-    public String y;
+    @SerializedName("latitude")
+    @Expose
+    private String latitude;
+    @SerializedName("longitude")
+    @Expose
+    private String longitude;
     public final static Parcelable.Creator<ConnectionPlace> CREATOR = new Creator<ConnectionPlace>() {
 
 
@@ -33,26 +34,32 @@ public class ConnectionPlace implements Parcelable
     ;
 
     protected ConnectionPlace(Parcel in) {
-        this.city = ((String) in.readValue((String.class.getClassLoader())));
-        this.id = ((String) in.readValue((String.class.getClassLoader())));
         this.latitude = ((String) in.readValue((String.class.getClassLoader())));
         this.longitude = ((String) in.readValue((String.class.getClassLoader())));
-        this.name = ((String) in.readValue((String.class.getClassLoader())));
-        this.x = ((String) in.readValue((String.class.getClassLoader())));
-        this.y = ((String) in.readValue((String.class.getClassLoader())));
     }
 
     public ConnectionPlace() {
     }
 
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeValue(city);
-        dest.writeValue(id);
         dest.writeValue(latitude);
         dest.writeValue(longitude);
-        dest.writeValue(name);
-        dest.writeValue(x);
-        dest.writeValue(y);
     }
 
     public int describeContents() {

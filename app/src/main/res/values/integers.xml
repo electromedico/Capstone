@@ -2,4 +2,5 @@
 <resources>
 
     <integer name="maps_padding">200</integer>
+
 </resources>

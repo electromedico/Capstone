@@ -1,16 +1,24 @@
 
-package com.example.alex.capstone.model;
+package com.example.alex.capstone.model.getJourneysQueryModel;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.Parcelable.Creator;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 public class TransportMode implements Parcelable
 {
 
-    public String article;
-    public String id;
-    public String name;
+    @SerializedName("article")
+    @Expose
+    private String article;
+    @SerializedName("id")
+    @Expose
+    private String id;
+    @SerializedName("name")
+    @Expose
+    private String name;
     public final static Parcelable.Creator<TransportMode> CREATOR = new Creator<TransportMode>() {
 
 
@@ -35,6 +43,30 @@ public class TransportMode implements Parcelable
     }
 
     public TransportMode() {
+    }
+
+    public String getArticle() {
+        return article;
+    }
+
+    public void setArticle(String article) {
+        this.article = article;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void writeToParcel(Parcel dest, int flags) {

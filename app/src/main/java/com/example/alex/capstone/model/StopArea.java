@@ -1,16 +1,17 @@
 
 package com.example.alex.capstone.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.os.Parcelable.Creator;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class StopArea implements Parcelable
 {
+
     @SerializedName("cityId")
     @Expose
     private String cityId;
@@ -23,19 +24,12 @@ public class StopArea implements Parcelable
     @SerializedName("name")
     @Expose
     private String name;
-    @SerializedName("x")
+    @SerializedName("schedules")
     @Expose
-    private String x;
-    @SerializedName("y")
-    @Expose
-    private String y;
+    private List<Schedule> schedules = new ArrayList<Schedule>();
     @SerializedName("uniqueStopId")
     @Expose
     private String uniqueStopId;
-    @SerializedName("schedules")
-    @Expose
-    private List<Schedule> schedules = new ArrayList<>();
-
     public final static Parcelable.Creator<StopArea> CREATOR = new Creator<StopArea>() {
 
 
@@ -58,68 +52,11 @@ public class StopArea implements Parcelable
         this.cityName = ((String) in.readValue((String.class.getClassLoader())));
         this.id = ((String) in.readValue((String.class.getClassLoader())));
         this.name = ((String) in.readValue((String.class.getClassLoader())));
-        this.x = ((String) in.readValue((String.class.getClassLoader())));
-        this.y = ((String) in.readValue((String.class.getClassLoader())));
-        this.uniqueStopId = ((String) in.readValue((String.class.getClassLoader())));
         in.readList(this.schedules, (com.example.alex.capstone.model.Schedule.class.getClassLoader()));
+        this.uniqueStopId = ((String) in.readValue((String.class.getClassLoader())));
     }
 
-    /**
-     * No args constructor for use in serialization
-     * 
-     */
     public StopArea() {
-    }
-
-    /**
-     * 
-     * @param id
-     * @param name
-     * @param cityName
-     * @param y
-     * @param x
-     */
-    public StopArea(String cityName, String id, String name, String x, String y) {
-        super();
-        this.cityName = cityName;
-        this.id = id;
-        this.name = name;
-        this.x = x;
-        this.y = y;
-    }
-
-    /**
-     *
-     * @param cityId
-     * @param cityName
-     * @param id
-     * @param name
-     */
-    public StopArea(String cityId, String cityName, String id, String name) {
-        super();
-        this.cityId = cityId;
-        this.cityName = cityName;
-        this.id = id;
-        this.name = name;
-    }
-
-    /**
-     *
-     * @param id
-     * @param schedules
-     * @param cityId
-     * @param name
-     * @param cityName
-     * @param uniqueStopId
-     */
-    public StopArea(String cityId, String cityName, String id, String name, List<Schedule> schedules, String uniqueStopId) {
-        super();
-        this.cityId = cityId;
-        this.cityName = cityName;
-        this.id = id;
-        this.name = name;
-        this.schedules = schedules;
-        this.uniqueStopId = uniqueStopId;
     }
 
     public String getCityId() {
@@ -154,20 +91,12 @@ public class StopArea implements Parcelable
         this.name = name;
     }
 
-    public String getX() {
-        return x;
+    public List<Schedule> getSchedules() {
+        return schedules;
     }
 
-    public void setX(String x) {
-        this.x = x;
-    }
-
-    public String getY() {
-        return y;
-    }
-
-    public void setY(String y) {
-        this.y = y;
+    public void setSchedules(List<Schedule> schedules) {
+        this.schedules = schedules;
     }
 
     public String getUniqueStopId() {
@@ -178,24 +107,13 @@ public class StopArea implements Parcelable
         this.uniqueStopId = uniqueStopId;
     }
 
-    public List<Schedule> getSchedules() {
-        return schedules;
-    }
-
-    public void setSchedules(List<Schedule> schedules) {
-        this.schedules = schedules;
-    }
-
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeValue(cityId);
         dest.writeValue(cityName);
         dest.writeValue(id);
         dest.writeValue(name);
-        dest.writeValue(x);
-        dest.writeValue(y);
         dest.writeList(schedules);
         dest.writeValue(uniqueStopId);
-
     }
 
     public int describeContents() {

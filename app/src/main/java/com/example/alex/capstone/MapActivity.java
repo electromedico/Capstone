@@ -2,9 +2,10 @@ package com.example.alex.capstone;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.SearchManager;
+
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.database.MatrixCursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.VectorDrawable;
@@ -17,12 +18,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+
+import android.support.v7.widget.SearchView;
 import android.view.View;
 import android.widget.ImageButton;
+
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.alex.capstone.adapters.InfoWindowsRecyclerViewAdapter;
+import com.example.alex.capstone.adapters.infoWindowAdapters.InfoWindowsRecyclerViewAdapter;
+import com.example.alex.capstone.adapters.searchViewAdapters.SearchSuggestionsAdapter;
 import com.example.alex.capstone.model.Departures;
 import com.example.alex.capstone.model.Journey;
 import com.example.alex.capstone.model.PhysicalStop;
@@ -48,17 +53,16 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static android.widget.Toast.LENGTH_LONG;
-import static com.example.alex.capstone.utils.LatLongUtils.RADIUS_METERS_OUTER_BOX;
+import static com.example.alex.capstone.adapters.searchViewAdapters.SearchSuggestionsAdapter.mFields;
 import static com.example.alex.capstone.utils.LatLongUtils.RADIUS_METERS_ZOOM;
 
-public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, OnTaskCompleted {
+public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, OnTaskCompleted, GoogleMap.OnCameraIdleListener {
 
     private static final int MY_PERMISSIONS_REQUEST_LOCATION = 100;
     private GoogleMap mGoogleMap;
@@ -72,6 +76,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private GetCallController getCallController;
     private LinearLayoutManager mLayoutManager;
     private String mSelectedStopAreaID;
+    private List<Place> placeList;
 
     @BindView(R.id.favorites_image_button)
     ImageButton mFavoritesIb;
@@ -92,11 +97,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     ImageButton mCloseInfoWindow;
     @BindView(R.id.search_view)
     android.support.v7.widget.SearchView searchView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
         ButterKnife.bind(this);
+
         // Get the SupportMapFragment and request notification
         // when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -135,7 +142,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mCenterLocationFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mGoogleMap.animateCamera(CameraUpdateFactory.newLatLng(mlatLngPosition));
+
+              getLastLocation();
             }
         });
 
@@ -160,8 +168,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mRecyclerView.setAdapter(recyclerViewAdapter);
 
         //SearchView Configuration
-        // Get the SearchView and set the searchable configuration
-        SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
         searchView.setOnQueryTextListener(new android.support.v7.widget.SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -170,15 +176,28 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                if (newText.length()>3){
-                    getCallController.startGetStopSchedules(newText);
+                if (newText.length()>2){
+                    getCallController.startGetPlaces(newText);
                 }
                 return true;
+            }
+        });
+        searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+            @Override
+            public boolean onSuggestionSelect(int position) {
+                return false;
+            }
+
+            @Override
+            public boolean onSuggestionClick(int position) {
+               callGetJourney(position);
+                return false;
             }
         });
 
 
     }
+
 
     @Override
     protected void onStart() {
@@ -193,6 +212,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         if(cameraPosition!=null)mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
         mGoogleMap.setPadding(0,mapsPadding,0,mapsPadding);
+        mGoogleMap.setOnCameraIdleListener(this);
         mUiSettings = mGoogleMap.getUiSettings();
         mUiSettings.setCompassEnabled(true);
         mUiSettings.setMyLocationButtonEnabled(false);
@@ -262,18 +282,31 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     @Override
-    public void onTaskCompletedGetJourneys(Journey journey) {
-
+    public void onTaskCompletedGetJourneys(List<com.example.alex.capstone.model.getJourneysQueryModel.Journey> journeys) {
+        List<com.example.alex.capstone.model.getJourneysQueryModel.Journey> journeyList = journeys;
     }
+
 
     @Override
     public void onTaskCompletedGetPlaces(PlacesList placesList) {
         if (placesList!=null && !placesList.getPlace().isEmpty()){
-            for (Place place : placesList.getPlace()){
-            //     searchView.setSuggestionsAdapter();
+
+            //we fill the list
+            placeList= placesList.getPlace();
+            //MatrixCursor SetUp
+            String[] columns = mFields;
+            MatrixCursor matrixCursor= new MatrixCursor(columns);
+            //we loop the placeList
+            for (int i=0;i<placeList.size();i++){
+                String placeLabel=placeList.get(i).getLabel();
+                matrixCursor.addRow(new String[]{String.valueOf(i),placeLabel});
             }
 
-
+            searchView.setSuggestionsAdapter(
+                    new SearchSuggestionsAdapter(this,
+                           R.layout.suggestions_item_layout,
+                            matrixCursor,
+                            new int[]{R.id.suggestion_tv}));
         }
         else{
 
@@ -324,13 +357,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                                 mLocation = location;
                                 mlatLngPosition = locationToLatLong(mLocation);
 
-                                //call the service to get all the stop zones
-                                LatLngBounds latLngBoundsOuterBox = LatLongUtils.calculateBoundingBox(RADIUS_METERS_OUTER_BOX, mlatLngPosition);
-                                getCallController.startGetNearbyStops(latLngBoundsOuterBox);
-
                                 //Bounding box to calculate the zoom with RADIUS_METERS_ZOOM and move the camera to last known location
                                 LatLngBounds latLngBounds = LatLongUtils.calculateBoundingBox(RADIUS_METERS_ZOOM, mlatLngPosition);
                                 mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 0));
+
                                 mGoogleMap.setMyLocationEnabled(true);
                             }
 
@@ -389,6 +419,29 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         Double x = location.getLatitude();
         LatLng latLng = new LatLng(x, y);
         return latLng;
+    }
+
+    @Override
+    public void onCameraIdle() {
+        mGoogleMap.clear();
+        if (mGoogleMap.getCameraPosition().zoom > Float.parseFloat(getString(R.string.map_zoom_level))){
+            //call the service to get all the stop zones
+            cameraPosition=mGoogleMap.getCameraPosition();
+            LatLngBounds latLngBoundsOuterBox=mGoogleMap.getProjection().getVisibleRegion().latLngBounds;
+            getCallController.startGetNearbyStops(latLngBoundsOuterBox);
+        }
+
+
+    }
+
+    private void callGetJourney(int position) {
+        if (placeList!=null && !placeList.isEmpty()){
+
+            Place place =placeList.get(position);
+            LatLng latLngArrival = new LatLng(Float.parseFloat(place.getX()),Float.parseFloat(place.getY()));
+            getCallController.startGetJourneys(latLngArrival,mlatLngPosition);
+        }
+
     }
 
 }

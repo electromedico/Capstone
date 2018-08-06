@@ -4,12 +4,18 @@ package com.example.alex.capstone.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.Parcelable.Creator;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 public class Text implements Parcelable
 {
 
-    public String lang;
-    public String text;
+    @SerializedName("lang")
+    @Expose
+    private String lang;
+    @SerializedName("text")
+    @Expose
+    private String text;
     public final static Parcelable.Creator<Text> CREATOR = new Creator<Text>() {
 
 
@@ -33,6 +39,22 @@ public class Text implements Parcelable
     }
 
     public Text() {
+    }
+
+    public String getLang() {
+        return lang;
+    }
+
+    public void setLang(String lang) {
+        this.lang = lang;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
     }
 
     public void writeToParcel(Parcel dest, int flags) {

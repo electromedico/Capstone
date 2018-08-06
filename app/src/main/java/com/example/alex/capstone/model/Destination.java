@@ -22,8 +22,8 @@ public class Destination implements Parcelable
     @SerializedName("name")
     @Expose
     private String name;
-
     public final static Parcelable.Creator<Destination> CREATOR = new Creator<Destination>() {
+
 
         @SuppressWarnings({
             "unchecked"
@@ -46,41 +46,16 @@ public class Destination implements Parcelable
         this.name = ((String) in.readValue((String.class.getClassLoader())));
     }
 
-    /**
-     * No args constructor for use in serialization
-     * 
-     */
     public Destination() {
     }
 
-    /**
-     * 
-     * @param id
-     * @param name
-     * @param cityName
-     */
-    public Destination(String cityName, String id, String name) {
-        super();
-        this.cityName = cityName;
-        this.id = id;
-        this.name = name;
+    public String getCityId() {
+        return cityId;
     }
 
-    /**
-     *
-     * @param id
-     * @param cityId
-     * @param name
-     * @param cityName
-     */
-    public Destination(String cityId, String cityName, String id, String name) {
-        super();
+    public void setCityId(String cityId) {
         this.cityId = cityId;
-        this.cityName = cityName;
-        this.id = id;
-        this.name = name;
     }
-
 
     public String getCityName() {
         return cityName;
@@ -106,20 +81,11 @@ public class Destination implements Parcelable
         this.name = name;
     }
 
-    public String getCityId() {
-        return cityId;
-    }
-
-    public void setCityId(String cityId) {
-        this.cityId = cityId;
-    }
-
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeValue(cityId);
         dest.writeValue(cityName);
         dest.writeValue(id);
         dest.writeValue(name);
-
     }
 
     public int describeContents() {

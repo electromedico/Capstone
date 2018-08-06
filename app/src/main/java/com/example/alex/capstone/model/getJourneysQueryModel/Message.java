@@ -1,5 +1,5 @@
 
-package com.example.alex.capstone.model;
+package com.example.alex.capstone.model.getJourneysQueryModel;
 
 import android.os.Parcel;
 import android.os.Parcelable;

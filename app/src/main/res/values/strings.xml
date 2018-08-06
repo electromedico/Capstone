@@ -17,6 +17,9 @@
     <string name="favorites_icon">Favorites icon</string>
     <string name="lines">Lines : </string>
 
+    <!--Value of the min zoom level to show and query the bus stops-->
+    <string name="map_zoom_level">15.5</string>
+
 
     <!--Strings for querying the API-->
     <string name="display_destinations">displayDestinations</string>
@@ -34,7 +37,7 @@
     <!--JSON Keys-->
     <string name="stop_json_key">stop</string>
     <string name="route_planner_result_json_key">routePlannerResult</string>
-    <string name="stoppoint_json_key">stoppoint</string>
+    <string name="stoppoint_json_key">stopPoint</string>
     <string name="service_get_nearby_stops">ServiceNearbyStops</string>
     <string name="no_stops">There are no nearby Stops</string>
     <string name="camera_key">camera_key</string>

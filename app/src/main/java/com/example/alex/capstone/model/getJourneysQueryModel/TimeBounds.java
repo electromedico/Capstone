@@ -1,15 +1,21 @@
 
-package com.example.alex.capstone.model;
+package com.example.alex.capstone.model.getJourneysQueryModel;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.Parcelable.Creator;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 public class TimeBounds implements Parcelable
 {
 
-    public String maxDepartureHour;
-    public String minArrivalHour;
+    @SerializedName("maxDepartureHour")
+    @Expose
+    private String maxDepartureHour;
+    @SerializedName("minArrivalHour")
+    @Expose
+    private String minArrivalHour;
     public final static Parcelable.Creator<TimeBounds> CREATOR = new Creator<TimeBounds>() {
 
 
@@ -33,6 +39,22 @@ public class TimeBounds implements Parcelable
     }
 
     public TimeBounds() {
+    }
+
+    public String getMaxDepartureHour() {
+        return maxDepartureHour;
+    }
+
+    public void setMaxDepartureHour(String maxDepartureHour) {
+        this.maxDepartureHour = maxDepartureHour;
+    }
+
+    public String getMinArrivalHour() {
+        return minArrivalHour;
+    }
+
+    public void setMinArrivalHour(String minArrivalHour) {
+        this.minArrivalHour = minArrivalHour;
     }
 
     public void writeToParcel(Parcel dest, int flags) {

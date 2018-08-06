@@ -1,5 +1,5 @@
 
-package com.example.alex.capstone.model;
+package com.example.alex.capstone.model.getJourneysQueryModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,12 +33,18 @@ public class Line implements Parcelable
     @SerializedName("network")
     @Expose
     private String network;
+    @SerializedName("service_number")
+    @Expose
+    private String serviceNumber;
     @SerializedName("shortName")
     @Expose
     private String shortName;
     @SerializedName("style")
     @Expose
     private String style;
+    @SerializedName("transportMode")
+    @Expose
+    private TransportMode transportMode;
     public final static Parcelable.Creator<Line> CREATOR = new Creator<Line>() {
 
 
@@ -61,11 +67,13 @@ public class Line implements Parcelable
         this.color = ((String) in.readValue((String.class.getClassLoader())));
         this.fgXmlColor = ((String) in.readValue((String.class.getClassLoader())));
         this.id = ((String) in.readValue((String.class.getClassLoader())));
-        in.readList(this.message, (com.example.alex.capstone.model.Message.class.getClassLoader()));
+        in.readList(this.message, (com.example.alex.capstone.model.getJourneysQueryModel.Message.class.getClassLoader()));
         this.name = ((String) in.readValue((String.class.getClassLoader())));
         this.network = ((String) in.readValue((String.class.getClassLoader())));
+        this.serviceNumber = ((String) in.readValue((String.class.getClassLoader())));
         this.shortName = ((String) in.readValue((String.class.getClassLoader())));
         this.style = ((String) in.readValue((String.class.getClassLoader())));
+        this.transportMode = ((TransportMode) in.readValue((TransportMode.class.getClassLoader())));
     }
 
     public Line() {
@@ -127,6 +135,14 @@ public class Line implements Parcelable
         this.network = network;
     }
 
+    public String getServiceNumber() {
+        return serviceNumber;
+    }
+
+    public void setServiceNumber(String serviceNumber) {
+        this.serviceNumber = serviceNumber;
+    }
+
     public String getShortName() {
         return shortName;
     }
@@ -143,6 +159,14 @@ public class Line implements Parcelable
         this.style = style;
     }
 
+    public TransportMode getTransportMode() {
+        return transportMode;
+    }
+
+    public void setTransportMode(TransportMode transportMode) {
+        this.transportMode = transportMode;
+    }
+
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeValue(bgXmlColor);
         dest.writeValue(color);
@@ -151,8 +175,10 @@ public class Line implements Parcelable
         dest.writeList(message);
         dest.writeValue(name);
         dest.writeValue(network);
+        dest.writeValue(serviceNumber);
         dest.writeValue(shortName);
         dest.writeValue(style);
+        dest.writeValue(transportMode);
     }
 
     public int describeContents() {

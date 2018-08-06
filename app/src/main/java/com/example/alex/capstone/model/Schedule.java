@@ -17,7 +17,7 @@ public class Schedule implements Parcelable
     private Destination destination;
     @SerializedName("journeys")
     @Expose
-    private List<Journey> journeys = new ArrayList<>();
+    private List<Journey> journeys = new ArrayList<Journey>();
     @SerializedName("line")
     @Expose
     private Line line;
@@ -48,26 +48,7 @@ public class Schedule implements Parcelable
         this.stop = ((Stop) in.readValue((Stop.class.getClassLoader())));
     }
 
-    /**
-     * No args constructor for use in serialization
-     * 
-     */
     public Schedule() {
-    }
-
-    /**
-     * 
-     * @param journeys
-     * @param stop
-     * @param line
-     * @param destination
-     */
-    public Schedule(Destination destination, List<Journey> journeys, Line line, Stop stop) {
-        super();
-        this.destination = destination;
-        this.journeys = journeys;
-        this.line = line;
-        this.stop = stop;
     }
 
     public Destination getDestination() {

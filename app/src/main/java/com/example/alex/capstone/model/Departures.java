@@ -14,7 +14,7 @@ public class Departures implements Parcelable
 
     @SerializedName("stopAreas")
     @Expose
-    private List<StopArea> stopAreas = new ArrayList<>();
+    private List<StopArea> stopAreas = new ArrayList<StopArea>();
     public final static Parcelable.Creator<Departures> CREATOR = new Creator<Departures>() {
 
 
@@ -36,20 +36,7 @@ public class Departures implements Parcelable
         in.readList(this.stopAreas, (com.example.alex.capstone.model.StopArea.class.getClassLoader()));
     }
 
-    /**
-     * No args constructor for use in serialization
-     * 
-     */
     public Departures() {
-    }
-
-    /**
-     * 
-     * @param stopAreas
-     */
-    public Departures(List<StopArea> stopAreas) {
-        super();
-        this.stopAreas = stopAreas;
     }
 
     public List<StopArea> getStopAreas() {

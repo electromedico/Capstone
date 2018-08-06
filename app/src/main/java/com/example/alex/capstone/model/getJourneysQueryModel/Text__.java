@@ -1,5 +1,5 @@
 
-package com.example.alex.capstone.model;
+package com.example.alex.capstone.model.getJourneysQueryModel;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -7,7 +7,7 @@ import android.os.Parcelable.Creator;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Text_ implements Parcelable
+public class Text__ implements Parcelable
 {
 
     @SerializedName("lang")
@@ -16,29 +16,29 @@ public class Text_ implements Parcelable
     @SerializedName("text")
     @Expose
     private String text;
-    public final static Parcelable.Creator<Text_> CREATOR = new Creator<Text_>() {
+    public final static Parcelable.Creator<Text__> CREATOR = new Creator<Text__>() {
 
 
         @SuppressWarnings({
             "unchecked"
         })
-        public Text_ createFromParcel(Parcel in) {
-            return new Text_(in);
+        public Text__ createFromParcel(Parcel in) {
+            return new Text__(in);
         }
 
-        public Text_[] newArray(int size) {
-            return (new Text_[size]);
+        public Text__[] newArray(int size) {
+            return (new Text__[size]);
         }
 
     }
     ;
 
-    protected Text_(Parcel in) {
+    protected Text__(Parcel in) {
         this.lang = ((String) in.readValue((String.class.getClassLoader())));
         this.text = ((String) in.readValue((String.class.getClassLoader())));
     }
 
-    public Text_() {
+    public Text__() {
     }
 
     public String getLang() {

@@ -7,8 +7,7 @@ import com.google.maps.android.SphericalUtil;
 
 public class LatLongUtils{
     public static double RADIUS_METERS_OUTER_BOX =500;
-    public static double RADIUS_METERS_INNER_BOX =500;
-    public static double RADIUS_METERS_ZOOM =100;
+    public static double RADIUS_METERS_ZOOM =250;
 
 
     public static LatLngBounds calculateBoundingBox(Double radius, LatLng center){

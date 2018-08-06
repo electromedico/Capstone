@@ -38,22 +38,7 @@ public class GetStopSchedulesQuery implements Parcelable
         this.expirationDate = ((String) in.readValue((String.class.getClassLoader())));
     }
 
-    /**
-     * No args constructor for use in serialization
-     * 
-     */
     public GetStopSchedulesQuery() {
-    }
-
-    /**
-     * 
-     * @param expirationDate
-     * @param departures
-     */
-    public GetStopSchedulesQuery(Departures departures, String expirationDate) {
-        super();
-        this.departures = departures;
-        this.expirationDate = expirationDate;
     }
 
     public Departures getDepartures() {

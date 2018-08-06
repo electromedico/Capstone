@@ -42,24 +42,7 @@ public class Journey implements Parcelable
         this.waitingTime = ((String) in.readValue((String.class.getClassLoader())));
     }
 
-    /**
-     * No args constructor for use in serialization
-     * 
-     */
     public Journey() {
-    }
-
-    /**
-     * 
-     * @param realTime
-     * @param waitingTime
-     * @param dateTime
-     */
-    public Journey(String dateTime, String realTime, String waitingTime) {
-        super();
-        this.dateTime = dateTime;
-        this.realTime = realTime;
-        this.waitingTime = waitingTime;
     }
 
     public String getDateTime() {

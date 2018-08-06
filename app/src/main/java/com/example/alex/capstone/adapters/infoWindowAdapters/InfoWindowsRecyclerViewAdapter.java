@@ -1,4 +1,4 @@
-package com.example.alex.capstone.adapters;
+package com.example.alex.capstone.adapters.infoWindowAdapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
