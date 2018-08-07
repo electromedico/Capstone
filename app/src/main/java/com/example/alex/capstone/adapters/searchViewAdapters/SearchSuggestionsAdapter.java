@@ -6,7 +6,7 @@ import android.support.v4.widget.SimpleCursorAdapter;
 
 public class SearchSuggestionsAdapter extends SimpleCursorAdapter {
 
-    public static final String[] mFields  = { "_id", "result" };
+    public static final String[] SUGESTION_CURSOR_FIELDS = { "_id", "result" };
     private static final String[] mVisible = { "result" };
 
     public SearchSuggestionsAdapter(Context context, int layout, Cursor c, int[] to) {

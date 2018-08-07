@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.example.mapwithmarker.MapsMarkerActivity"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|top"
+        android:layout_margin="@dimen/search_bar_margin"
+        android:background="@color/white"
+        android:paddingStart="@dimen/_search_bar_padding"
+        android:paddingEnd="@dimen/_search_bar_padding"
+        android:elevation="@dimen/dp8"
+        android:clickable="true"
+        >
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/drawer_icon_ib"
+            android:src="@drawable/ic_menu_black_24dp"
+            android:background="@color/white_smoke"
+            android:layout_gravity="center"
+            android:contentDescription="@string/menu_icon"/>
+
+        <android.support.v7.widget.SearchView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:searchIcon="@drawable/ic_search_black_24dp"
+            android:id="@+id/search_view"
+            app:iconifiedByDefault="false"
+            app:defaultQueryHint="@string/search_destination"/>
+    </LinearLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/dp8"
+        android:clickable="true">
+
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/center_location_image_view"
+            android:src="@drawable/ic_my_location_black_24dp"
+            android:elevation="@dimen/dp8"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_margin="8dp"/>
+
+        <include layout="@layout/info_window_layout"
+            android:id="@+id/info_window_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/center_location_image_view"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_margin="8dp"
+            android:visibility="gone"
+            />
+
+        <include
+            android:id="@+id/bottom_bar"
+            layout="@layout/map_bottom_bar_layout"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_gravity="bottom"
+            app:layout_constraintTop_toBottomOf="@id/center_location_image_view"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_margin="8dp"
+            />
+    </android.support.constraint.ConstraintLayout>
+
+
+</FrameLayout>

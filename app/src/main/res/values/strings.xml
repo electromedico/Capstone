@@ -64,5 +64,10 @@
     <string name="param_display_best_place">1</string>
     <string name="term">term</string>
     <string name="suggestion_column">1</string>
+    <string name="nav_header_desc">logo</string>
+    <string name="nav_header_title">On Y Va</string>
+    <string name="nav_header_subtitle">Hi!</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 
 </resources>

@@ -12,7 +12,11 @@ import android.graphics.drawable.VectorDrawable;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,7 +24,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import android.support.v7.widget.SearchView;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.GridLayout;
 import android.widget.ImageButton;
 
 import android.widget.TextView;
@@ -29,7 +35,6 @@ import android.widget.Toast;
 import com.example.alex.capstone.adapters.infoWindowAdapters.InfoWindowsRecyclerViewAdapter;
 import com.example.alex.capstone.adapters.searchViewAdapters.SearchSuggestionsAdapter;
 import com.example.alex.capstone.model.Departures;
-import com.example.alex.capstone.model.Journey;
 import com.example.alex.capstone.model.PhysicalStop;
 import com.example.alex.capstone.model.PhysicalStops;
 import com.example.alex.capstone.model.Place;
@@ -53,16 +58,18 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static android.widget.Toast.LENGTH_LONG;
-import static com.example.alex.capstone.adapters.searchViewAdapters.SearchSuggestionsAdapter.mFields;
+import static com.example.alex.capstone.adapters.searchViewAdapters.SearchSuggestionsAdapter.SUGESTION_CURSOR_FIELDS;
 import static com.example.alex.capstone.utils.LatLongUtils.RADIUS_METERS_ZOOM;
 
-public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, OnTaskCompleted, GoogleMap.OnCameraIdleListener {
+public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, OnTaskCompleted, GoogleMap.OnCameraIdleListener, NavigationView.OnNavigationItemSelectedListener {
 
     private static final int MY_PERMISSIONS_REQUEST_LOCATION = 100;
     private GoogleMap mGoogleMap;
@@ -77,6 +84,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private LinearLayoutManager mLayoutManager;
     private String mSelectedStopAreaID;
     private List<Place> placeList;
+    private List<Marker> mStopMarkers= new ArrayList<>();
+    private boolean mDrawerState= false;
 
     @BindView(R.id.favorites_image_button)
     ImageButton mFavoritesIb;
@@ -97,6 +106,15 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     ImageButton mCloseInfoWindow;
     @BindView(R.id.search_view)
     android.support.v7.widget.SearchView searchView;
+    @BindView(R.id.drawer_layout)
+    DrawerLayout mDrawerLayout;
+    @BindView(R.id.nav_view)
+    NavigationView mNavigationView;
+    @BindView(R.id.drawer_icon_ib)
+    ImageButton mDrawerToggleIb;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,6 +129,33 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
         //Instance of the Fused Location Provider Client
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
+
+        getCallController = new GetCallController(this, this);
+
+        //InfoWindow Recycler view SetUp
+        RecyclerView mRecyclerView = findViewById(R.id.bus_schedules_info_window_rv);
+        // use a linear layout manager
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        // specify an adapter (see also next example)
+
+        recyclerViewAdapter = new InfoWindowsRecyclerViewAdapter(this);
+        mRecyclerView.setAdapter(recyclerViewAdapter);
+
+        mNavigationView.setNavigationItemSelectedListener(this);
+
+        //Setup the buttons onClickListener
+        setUpButtons();
+        //SearchView Configuration
+        setUpSearchView();
+
+    }
+
+    /**
+     * onCreate method to setup the buttons click listners
+     */
+    private void setUpButtons(){
 
         mFavoritesIb.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,11 +184,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 Toast.makeText(MapActivity.this,"Lines", LENGTH_LONG).show();
             }
         });
+
         mCenterLocationFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-              getLastLocation();
+                getLastLocation();
             }
         });
 
@@ -155,23 +201,36 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         });
 
-        getCallController = new GetCallController(this, this);
+        mDrawerToggleIb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mDrawerLayout.isDrawerOpen(GravityCompat.START)){
+                    mDrawerLayout.closeDrawer(GravityCompat.START);
+                }
+                else {
+                    mDrawerLayout.openDrawer(GravityCompat.START);
+                }
+            }
+        });
 
-        //InfoWindow Recycler view SetUp
-        RecyclerView mRecyclerView = findViewById(R.id.bus_schedules_info_window_rv);
-        // use a linear layout manager
-        mLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        // specify an adapter (see also next example)
+    }
 
-        recyclerViewAdapter = new InfoWindowsRecyclerViewAdapter(this);
-        mRecyclerView.setAdapter(recyclerViewAdapter);
+    /**
+     * On create method to setup the SerachView
+     */
+    private void setUpSearchView(){
+        //Set the suggestions adapter
+        searchView.setSuggestionsAdapter(
+                new SearchSuggestionsAdapter(this,
+                        R.layout.suggestions_item_layout,
+                        new MatrixCursor(SUGESTION_CURSOR_FIELDS),
+                        new int[]{R.id.suggestion_tv}));
 
-        //SearchView Configuration
         searchView.setOnQueryTextListener(new android.support.v7.widget.SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                return false;
+
+                return true;
             }
 
             @Override
@@ -179,29 +238,34 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 if (newText.length()>2){
                     getCallController.startGetPlaces(newText);
                 }
+                else {
+                    //cleat the suggestions list
+                    searchView.getSuggestionsAdapter().swapCursor(new MatrixCursor(SUGESTION_CURSOR_FIELDS));
+                }
                 return true;
             }
         });
         searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
             @Override
             public boolean onSuggestionSelect(int position) {
-                return false;
+                return true;
             }
 
             @Override
             public boolean onSuggestionClick(int position) {
-               callGetJourney(position);
-                return false;
+                Place place = placeList.get(position);
+                searchView.setQuery(place.getLabel(),true);
+                if (mClickMarker!= null)mClickMarker.remove();
+                mClickMarker = mGoogleMap.addMarker(new MarkerOptions()
+                        .position(new LatLng(Double.valueOf(place.getY()),Double.valueOf(place.getX())))
+                );
+                LatLngBounds latLngBounds = LatLongUtils.calculateBoundingBox(RADIUS_METERS_ZOOM, mClickMarker.getPosition());
+                mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds,0));
+
+                return true;
             }
         });
 
-
-    }
-
-
-    @Override
-    protected void onStart() {
-        super.onStart();
 
     }
 
@@ -294,19 +358,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             //we fill the list
             placeList= placesList.getPlace();
             //MatrixCursor SetUp
-            String[] columns = mFields;
-            MatrixCursor matrixCursor= new MatrixCursor(columns);
+            MatrixCursor suggestionsCursor =new MatrixCursor(SUGESTION_CURSOR_FIELDS);
+
             //we loop the placeList
             for (int i=0;i<placeList.size();i++){
                 String placeLabel=placeList.get(i).getLabel();
-                matrixCursor.addRow(new String[]{String.valueOf(i),placeLabel});
+                suggestionsCursor.addRow(new String[]{String.valueOf(i),placeLabel});
             }
-
-            searchView.setSuggestionsAdapter(
-                    new SearchSuggestionsAdapter(this,
-                           R.layout.suggestions_item_layout,
-                            matrixCursor,
-                            new int[]{R.id.suggestion_tv}));
+            searchView.getSuggestionsAdapter().swapCursor(suggestionsCursor);
         }
         else{
 
@@ -384,9 +443,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             for (PhysicalStop physicalStop : mlistPhysicalStops) {
 
                 //The API has inverted the lat and long values
-                Double y = Double.valueOf(physicalStop.getX());
-                Double x = Double.valueOf(physicalStop.getY());
-                LatLng latLng = new LatLng(x, y);
+                Double x = Double.valueOf(physicalStop.getX());
+                Double y = Double.valueOf(physicalStop.getY());
+                LatLng latLng = new LatLng(y,x);
                 Drawable drawable = getDrawable(R.drawable.ic_marker);
                 //Vector Drawable to Bitmap
                 Bitmap icon = com.example.alex.capstone.utils.ResourceUtils.getBitmap((VectorDrawable) drawable);
@@ -395,6 +454,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         position(latLng)
                         .icon(BitmapDescriptorFactory.fromBitmap(icon)));
                 marker.setTag(physicalStop);
+                mStopMarkers.add(marker);
             }
         } else {
             Toast.makeText(this, getString(R.string.no_stops), LENGTH_LONG).show();
@@ -423,7 +483,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     @Override
     public void onCameraIdle() {
-        mGoogleMap.clear();
+        clearStopMarkers();
         if (mGoogleMap.getCameraPosition().zoom > Float.parseFloat(getString(R.string.map_zoom_level))){
             //call the service to get all the stop zones
             cameraPosition=mGoogleMap.getCameraPosition();
@@ -434,14 +494,27 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     }
 
+    private void clearStopMarkers() {
+        if (mStopMarkers!=null && !mStopMarkers.isEmpty()){
+            for (Marker marker : mStopMarkers){
+                marker.remove();
+            }
+        }
+    }
+
     private void callGetJourney(int position) {
         if (placeList!=null && !placeList.isEmpty()){
 
             Place place =placeList.get(position);
-            LatLng latLngArrival = new LatLng(Float.parseFloat(place.getX()),Float.parseFloat(place.getY()));
+            LatLng latLngArrival = new LatLng(Float.parseFloat(place.getY()),Float.parseFloat(place.getX()));
             getCallController.startGetJourneys(latLngArrival,mlatLngPosition);
         }
 
     }
 
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        return false;
+    }
 }

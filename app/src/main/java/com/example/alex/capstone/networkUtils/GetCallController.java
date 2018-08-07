@@ -113,7 +113,7 @@ public class GetCallController implements Callback<ResponseBody> {
                 departureCoordinates);
 
         parameters.put(context.getString(R.string.arrival_place),
-                departureCoordinates);
+                arrivalCoordinates);
 
         parameters.put(context.getString(R.string.number_results),
                 context.getString(R.string.param_number_results));
@@ -128,7 +128,7 @@ public class GetCallController implements Callback<ResponseBody> {
         parameters.put(context.getString(R.string.api_key_param), apiKey);
 
         //Cal the get method
-        Call<ResponseBody> call = tisseoAPI.getStopSchedule(parameters);
+        Call<ResponseBody> call = tisseoAPI.getJourney(parameters);
         call.enqueue(this);
     }
 
