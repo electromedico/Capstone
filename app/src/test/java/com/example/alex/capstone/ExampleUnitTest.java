@@ -1,10 +1,15 @@
 package com.example.alex.capstone;
 
-import com.example.alex.capstone.utils.LatLongUtils;
+import com.example.alex.capstone.utils.MapUtils;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 
 import org.junit.Test;
+
+import java.io.IOException;
+import java.util.List;
+
+import static com.example.alex.capstone.utils.MapUtils.RADIUS_METERS_ZOOM;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -12,10 +17,15 @@ import org.junit.Test;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 public class ExampleUnitTest {
+
+    public ExampleUnitTest() {
+    }
+
     @Test
     public void calculateBondingBox_iscorrect() {
         LatLng l1 = new LatLng(1.457652,43.630826);
-        LatLngBounds latLngBounds = LatLongUtils.calculateBondingBox(l1);
+        LatLngBounds latLngBounds = MapUtils.calculateBoundingBox(RADIUS_METERS_ZOOM,l1);
         assert true;
     }
+
 }

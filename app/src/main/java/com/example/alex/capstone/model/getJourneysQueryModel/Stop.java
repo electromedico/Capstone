@@ -4,8 +4,12 @@ package com.example.alex.capstone.model.getJourneysQueryModel;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.Parcelable.Creator;
+
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
 
 public class Stop implements Parcelable
 {
@@ -37,6 +41,7 @@ public class Stop implements Parcelable
     @SerializedName("text")
     @Expose
     private Text_ text;
+
     public final static Parcelable.Creator<Stop> CREATOR = new Creator<Stop>() {
 
 
@@ -156,5 +161,6 @@ public class Stop implements Parcelable
     public int describeContents() {
         return  0;
     }
+
 
 }

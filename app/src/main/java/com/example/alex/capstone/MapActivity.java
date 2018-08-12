@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.MatrixCursor;
 import android.graphics.Bitmap;
@@ -16,7 +17,6 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -26,7 +26,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.GridLayout;
 import android.widget.ImageButton;
 
 import android.widget.TextView;
@@ -40,9 +39,13 @@ import com.example.alex.capstone.model.PhysicalStops;
 import com.example.alex.capstone.model.Place;
 import com.example.alex.capstone.model.PlacesList;
 import com.example.alex.capstone.model.StopArea;
+import com.example.alex.capstone.model.getJourneysQueryModel.Chunk;
+import com.example.alex.capstone.model.getJourneysQueryModel.Service;
+import com.example.alex.capstone.model.getJourneysQueryModel.Stop;
+import com.example.alex.capstone.model.getJourneysQueryModel.Street;
 import com.example.alex.capstone.networkUtils.GetCallController;
 import com.example.alex.capstone.networkUtils.OnTaskCompleted;
-import com.example.alex.capstone.utils.LatLongUtils;
+import com.example.alex.capstone.utils.MapUtils;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -56,9 +59,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,7 +73,7 @@ import butterknife.ButterKnife;
 
 import static android.widget.Toast.LENGTH_LONG;
 import static com.example.alex.capstone.adapters.searchViewAdapters.SearchSuggestionsAdapter.SUGESTION_CURSOR_FIELDS;
-import static com.example.alex.capstone.utils.LatLongUtils.RADIUS_METERS_ZOOM;
+import static com.example.alex.capstone.utils.MapUtils.RADIUS_METERS_ZOOM;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, OnTaskCompleted, GoogleMap.OnCameraIdleListener, NavigationView.OnNavigationItemSelectedListener {
 
@@ -85,7 +91,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private String mSelectedStopAreaID;
     private List<Place> placeList;
     private List<Marker> mStopMarkers= new ArrayList<>();
-    private boolean mDrawerState= false;
+    private List<Polyline> mPolyLines = new ArrayList<>();
 
     @BindView(R.id.favorites_image_button)
     ImageButton mFavoritesIb;
@@ -93,7 +99,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     ImageButton mNavigationIb;
     @BindView(R.id.lines_image_view)
     ImageButton mLinesIb;
-    @BindView(R.id.center_location_image_view)
+    @BindView(R.id.center_location_fab)
     FloatingActionButton mCenterLocationFAB;
     @BindView(R.id.bottom_bar)
     View mBottomBarV;
@@ -108,12 +114,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     android.support.v7.widget.SearchView searchView;
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
-    @BindView(R.id.nav_view)
+    @BindView(R.id.nav_view_menu)
     NavigationView mNavigationView;
     @BindView(R.id.drawer_icon_ib)
     ImageButton mDrawerToggleIb;
-
-
 
 
     @Override
@@ -152,6 +156,17 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (searchView != null) {
+            searchView.setQuery("", false);
+            searchView.setFocusable(false);
+
+        }
+    }
+
+
     /**
      * onCreate method to setup the buttons click listners
      */
@@ -172,8 +187,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     Toast.makeText(MapActivity.this,"Choose a point in the map", LENGTH_LONG).show();
                 }
                 else {
-                    //Todo implement navigation map activity
-                    Toast.makeText(MapActivity.this,"Comming soon", LENGTH_LONG).show();
+                   callGetJourney(mClickMarker);
                 }
             }
         });
@@ -259,7 +273,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 mClickMarker = mGoogleMap.addMarker(new MarkerOptions()
                         .position(new LatLng(Double.valueOf(place.getY()),Double.valueOf(place.getX())))
                 );
-                LatLngBounds latLngBounds = LatLongUtils.calculateBoundingBox(RADIUS_METERS_ZOOM, mClickMarker.getPosition());
+                LatLngBounds latLngBounds = MapUtils.calculateBoundingBox(RADIUS_METERS_ZOOM, mClickMarker.getPosition());
                 mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds,0));
 
                 return true;
@@ -297,15 +311,23 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         });
 
+        mGoogleMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(LatLng latLng) {
+                if (mClickMarker!=null)mClickMarker.remove();
+                hideInfoWindow();
+                mClickMarker = mGoogleMap.addMarker(new MarkerOptions()
+                        .position(latLng)
+                );
+
+            }
+        });
+
         mGoogleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
                 if (mClickMarker!=null)mClickMarker.remove();
-                mBottomBarV.setVisibility(View.VISIBLE);
-                mInfoWindowV.setVisibility(View.GONE);
-                mClickMarker = mGoogleMap.addMarker(new MarkerOptions()
-                        .position(latLng)
-                );
+                hideInfoWindow();
 
             }
         });
@@ -347,7 +369,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     @Override
     public void onTaskCompletedGetJourneys(List<com.example.alex.capstone.model.getJourneysQueryModel.Journey> journeys) {
-        List<com.example.alex.capstone.model.getJourneysQueryModel.Journey> journeyList = journeys;
+        loadJourneyIntoMap(journeys);
     }
 
 
@@ -417,7 +439,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                                 mlatLngPosition = locationToLatLong(mLocation);
 
                                 //Bounding box to calculate the zoom with RADIUS_METERS_ZOOM and move the camera to last known location
-                                LatLngBounds latLngBounds = LatLongUtils.calculateBoundingBox(RADIUS_METERS_ZOOM, mlatLngPosition);
+                                LatLngBounds latLngBounds = MapUtils.calculateBoundingBox(RADIUS_METERS_ZOOM, mlatLngPosition);
                                 mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 0));
 
                                 mGoogleMap.setMyLocationEnabled(true);
@@ -434,6 +456,59 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         switch (requestCode){
             case MY_PERMISSIONS_REQUEST_LOCATION:
                 getLastLocation();
+        }
+    }
+
+
+    private void loadJourneyIntoMap(List<com.example.alex.capstone.model.getJourneysQueryModel.Journey> journeys) {
+        clearPolylines();
+
+        if (journeys!= null && !journeys.isEmpty()){
+            List<Chunk> chunks = journeys.get(0).getJourney().getChunks();
+            assert !chunks.isEmpty();
+            for (Chunk chunk : chunks){
+                //Chunk can contain three types of objects we load the information accordingly
+                if (chunk.getService()!= null) loadServiceInfoIntoMap(chunk.getService());
+                if (chunk.getStop()!= null) loadStopInfoIntoMap(chunk.getStop());
+                if (chunk.getStreet()!=null) loadStreetInfoIntoMAp(chunk.getStreet());
+            }
+        }
+        else {
+            Toast.makeText(this,"no journeys found",LENGTH_LONG);
+        }
+    }
+
+    private void loadStreetInfoIntoMAp(Street street) {
+        String wtk =street.getWkt();
+        try {
+            List<List<LatLng>> latLngsList=MapUtils.wtkMultiLineStringToLatLngList(this,wtk);
+            //for the time being we only use the first option
+            LatLng[]latLngs= latLngsList.get(0).toArray(new LatLng[0]);
+            Polyline polyline = mGoogleMap.addPolyline(new PolylineOptions()
+                    .clickable(false)
+                    .add(latLngs));
+            mPolyLines.add(polyline);
+            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(polyline.getPoints().get(0)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void loadStopInfoIntoMap(Stop stop) {
+    }
+
+    private void loadServiceInfoIntoMap(Service service) {
+        String wtk = service.getWkt();
+        try {
+            List<LatLng> latLngList = MapUtils.wtkLineStringToLatLngList(this, wtk);
+            LatLng[]latLngs= latLngList.toArray(new LatLng[0]);
+            Polyline polyline = mGoogleMap.addPolyline(new PolylineOptions()
+                    .clickable(false)
+                    .add(latLngs));
+            mPolyLines.add(polyline);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -471,9 +546,21 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mInfoWindowV.setVisibility(View.VISIBLE);
         mStopNameInfoWindowTv.setText(stopArea.getName());
         recyclerViewAdapter.setmDataSet(stopArea);
-
     }
 
+    /**
+     *Method to hide the info window
+     */
+    private void hideInfoWindow(){
+        mBottomBarV.setVisibility(View.VISIBLE);
+        mInfoWindowV.setVisibility(View.GONE);
+    }
+
+    /**
+     * Transform location into LatLang
+     * @param location
+     * @return Location in LatLang format
+     */
     private LatLng locationToLatLong (Location location){
         Double y = location.getLongitude();
         Double x = location.getLatitude();
@@ -494,6 +581,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     }
 
+    /**
+     * clears all the Stop markers in the map
+     */
     private void clearStopMarkers() {
         if (mStopMarkers!=null && !mStopMarkers.isEmpty()){
             for (Marker marker : mStopMarkers){
@@ -502,11 +592,22 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
     }
 
-    private void callGetJourney(int position) {
-        if (placeList!=null && !placeList.isEmpty()){
+    /**
+     * clear polylines from map
+     */
+    private void clearPolylines(){
+        if (mPolyLines != null && !mPolyLines.isEmpty()){
+            for (Polyline polyline : mPolyLines){
+                polyline.remove();
+            }
+        }
+    }
 
-            Place place =placeList.get(position);
-            LatLng latLngArrival = new LatLng(Float.parseFloat(place.getY()),Float.parseFloat(place.getX()));
+    private void callGetJourney(Marker marker) {
+
+        if (marker!=null){
+
+            LatLng latLngArrival =marker.getPosition();
             getCallController.startGetJourneys(latLngArrival,mlatLngPosition);
         }
 
@@ -516,5 +617,21 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         return false;
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        }
+        else if (mInfoWindowV.getVisibility() == View.VISIBLE){
+            hideInfoWindow();
+        }else {
+            Intent a = new Intent(Intent.ACTION_MAIN);
+            a.addCategory(Intent.CATEGORY_HOME);
+            a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(a);
+        }
     }
 }
