@@ -10,5 +10,8 @@
     <color name="black">#000000</color>
     <color name="white_smoke">#F5F5F5</color>
 
+    <color name="colorFabFav">#FFFF00</color>
+    <color name="colorFabNotFav">#FFFFFF</color>
+
 
 </resources>

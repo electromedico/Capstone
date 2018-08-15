@@ -1,5 +1,7 @@
 package com.example.alex.capstone.networkUtils;
 
+import com.example.alex.capstone.model.GetStopPointsQuery;
+
 import java.util.Map;
 
 import okhttp3.ResponseBody;
@@ -15,7 +17,7 @@ public interface TisseoAPI {
     String JOURNEYS_PATH = "journeys.json";
 
     @GET(STOP_POINTS_PATH)
-    Call<ResponseBody> getNearbyStops(@QueryMap Map<String,String> options);
+    Call<GetStopPointsQuery> getNearbyStops(@QueryMap Map<String,String> options);
 
     @GET(STOP_SCHEDULES_PATH)
     Call<ResponseBody> getStopSchedule(@QueryMap Map<String,String> options);

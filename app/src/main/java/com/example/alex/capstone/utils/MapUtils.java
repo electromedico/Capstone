@@ -25,7 +25,7 @@ public class MapUtils {
     public static final String REGEX_MULTILINE_STRING = "MULTILINESTRING";
     public static final String REGEX_SPACE = "\\s";
     public static final String REGEX_ENDING_PARENTHESIS_COMA = "\\),\\s\\(";
-    public static final String WKT_REGEX_MULTILINE_STRING="(\\(\\()((.*?))(\\)\\))";
+    public static final String WKT_REGEX_MULTILINE_STRING="(\\(\\()(.*?)(\\)\\))";
 
 
 

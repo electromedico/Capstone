@@ -1,64 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:tools="http://schemas.android.com/tools"
-    android:layout_gravity="center|bottom"
-    android:background="@color/white"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_gravity="center|bottom"
+    android:background="@color/white"
     tools:ignore="Overdraw">
 
-<ImageButton
-    android:layout_width="wrap_content"
-    android:layout_height="match_parent"
-    android:background="@color/white"
-    app:layout_constraintEnd_toStartOf="@id/navigation_image_button"
-    app:layout_constraintStart_toEndOf="parent"
-    android:src="@drawable/ic_lines_24dp"
-    android:id="@+id/lines_image_view"
-    android:contentDescription="@string/line_map_icon" />
 
-<TextView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    app:layout_constraintStart_toStartOf="@id/lines_image_view"
-    app:layout_constraintEnd_toEndOf="@id/lines_image_view"
-    app:layout_constraintTop_toBottomOf="@id/lines_image_view"
-    android:text="@string/line_map"/>
+    <ImageButton
+        android:id="@+id/navigation_image_button"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:contentDescription="@string/start_navigation_icon"
+        android:src="@drawable/ic_navigation_black_24dp"
+        tools:layout_editor_absoluteX="352dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/guideline2"/>
 
-<ImageButton
-    android:layout_width="wrap_content"
-    android:layout_height="match_parent"
-    android:id="@+id/navigation_image_button"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    android:background="@color/white"
-    android:src="@drawable/ic_navigation_black_24dp"
-    android:contentDescription="@string/start_navigation_icon" />
-<TextView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    app:layout_constraintStart_toStartOf="@id/navigation_image_button"
-    app:layout_constraintEnd_toEndOf="@id/navigation_image_button"
-    app:layout_constraintTop_toBottomOf="@id/navigation_image_button"
-    android:text="@string/go"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/go"
+        app:layout_constraintEnd_toEndOf="@id/navigation_image_button"
+        app:layout_constraintStart_toStartOf="@id/navigation_image_button"
+        app:layout_constraintTop_toBottomOf="@id/navigation_image_button" />
 
-<ImageButton
-    android:layout_width="wrap_content"
-    android:layout_height="match_parent"
-    android:id="@+id/favorites_image_button"
-    app:layout_constraintEnd_toStartOf="parent"
-    android:background="@color/white"
-    app:layout_constraintStart_toEndOf="@id/navigation_image_button"
-    android:src="@drawable/ic_star_black_24dp"
-    android:contentDescription="@string/favorites_icon" />
+    <ImageButton
+        android:id="@+id/favorites_image_button"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:contentDescription="@string/favorites_icon"
+        android:src="@drawable/ic_star_black_24dp"
+        app:layout_constraintEnd_toStartOf="@id/guideline2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
-<TextView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    app:layout_constraintStart_toStartOf="@id/favorites_image_button"
-    app:layout_constraintEnd_toEndOf="@id/favorites_image_button"
-    app:layout_constraintTop_toBottomOf="@id/favorites_image_button"
-    android:text="@string/favorites"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/favorites"
+        app:layout_constraintEnd_toEndOf="@id/favorites_image_button"
+        app:layout_constraintStart_toStartOf="@id/favorites_image_button"
+        app:layout_constraintTop_toBottomOf="@id/favorites_image_button" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
 
 </android.support.constraint.ConstraintLayout>

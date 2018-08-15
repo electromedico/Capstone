@@ -11,4 +11,10 @@
     <item name="match_parent" type="dimen">-1</item>
     <item name="wrap_content" type="dimen">-2</item>
     <dimen name="fab_margin">16dp</dimen>
+
+    <!--
+Refer to App Widget Documentation for margin information
+http://developer.android.com/guide/topics/appwidgets/index.html#CreatingLayout
+    -->
+    <dimen name="widget_margin">8dp</dimen>
 </resources>

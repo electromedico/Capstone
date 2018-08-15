@@ -14,6 +14,8 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import okhttp3.Headers;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -46,38 +48,6 @@ public class GetCallController implements Callback<ResponseBody> {
 
     }
 
-    /**
-     *method to call getNearbyStops
-     */
-    public void startGetNearbyStops(LatLngBounds latLngBounds){
-        serviceCalled= GET_NEARBY_STOPS_TAG;
-
-        String coordinates= latLngBounds.southwest.longitude
-                +","+latLngBounds.southwest.latitude
-                +","+latLngBounds.northeast.longitude
-                +","+latLngBounds.northeast.latitude;
-
-        //Map for the query parameters
-        Map<String,String> parameters = new HashMap<>();
-
-        //Display coordinates
-        parameters.put(context.getString(R.string.display_coord_xy),
-                context.getString(R.string.display_coord_xy_value));
-
-        //Display Destination Parameter
-        parameters.put(context.getString(R.string.display_destinations),
-                context.getString(R.string.display_destinations_value));
-        //BBOX Parameter
-        parameters.put(context.getString(R.string.bbox),
-                coordinates);
-
-        //Api Key parameter
-        parameters.put(context.getString(R.string.api_key_param), apiKey);
-
-        //Cal the get method
-        Call<ResponseBody> call = tisseoAPI.getNearbyStops(parameters);
-        call.enqueue(this);
-    }
 
     public void startGetStopSchedules(String stopPointId){
 
@@ -162,7 +132,6 @@ public class GetCallController implements Callback<ResponseBody> {
     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
         //test response
         if (response.isSuccessful()) {
-
             try {
                 switch (serviceCalled){
 

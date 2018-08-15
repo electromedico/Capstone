@@ -30,6 +30,9 @@
 
     <string name="bbox">bbox</string>
     <string name="api_key_param">key</string>
+
+    <!--errors msgs-->
+    <string name="on_response_retrofit_nearby_stops">Nearby Stops Controller</string>
     <string name="on_response_excepion">getQuery or getQuery.Object() null</string>
     <string name="retrofit_on_failure_log_tag">RetrofitOnFailure</string>
     <string name="retrofit_on_response_log_tag">RetrofitOnResponse</string>
@@ -73,5 +76,13 @@
     <string name="settings">Settings</string>
     <string name="share_app">Share App</string>
     <string name="wrong_type_of_wtk">Wrong Type of WTK</string>
+    <string name="title_activity_about">About This App</string>
+    <string name="about_this_app">About this app</string>
+    <string name="about">This app is powered by Tisseo</string>
+    <string name="categorie_arret">Arrêts</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="configure">Configure</string>
+    <string name="favorite_json_key">json_fav_key</string>
 
 </resources>
