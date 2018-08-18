@@ -10,7 +10,7 @@ import com.example.alex.capstone.data.FavoritesContract;
 
 public class DbReadAllAsyncTask extends AsyncTaskLoader<Cursor> {
 
-    private Cursor cursor=null;
+    private final Cursor cursor=null;
     private final String TAG;
 
     public DbReadAllAsyncTask(Context context, String tag) {

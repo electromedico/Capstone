@@ -16,16 +16,16 @@ import java.util.regex.Pattern;
 
 public class MapUtils {
 
-    public static double RADIUS_METERS_ZOOM =250;
+    public static final double RADIUS_METERS_ZOOM =250;
 
     public static final String WKT_REGEX_STRING = "((((MULTI)?(POINT|LINESTRING|POLYGON)|GEOMETRYCOLLECTION)Z?M?)[\\s]*[(].*[)])";
-    public static final String WKT_PREGEX_LINE_STRING_REGEX ="\\((.*?)\\)";
-    public static final String WKT_COMA_SPACE_STRING_REGEX =",\\s";
-    public static final String REGEX_LINE_STRING = "LINESTRING";
-    public static final String REGEX_MULTILINE_STRING = "MULTILINESTRING";
-    public static final String REGEX_SPACE = "\\s";
-    public static final String REGEX_ENDING_PARENTHESIS_COMA = "\\),\\s\\(";
-    public static final String WKT_REGEX_MULTILINE_STRING="(\\(\\()(.*?)(\\)\\))";
+    private static final String WKT_PREGEX_LINE_STRING_REGEX ="\\((.*?)\\)";
+    private static final String WKT_COMA_SPACE_STRING_REGEX =",\\s";
+    private static final String REGEX_LINE_STRING = "LINESTRING";
+    private static final String REGEX_MULTILINE_STRING = "MULTILINESTRING";
+    private static final String REGEX_SPACE = "\\s";
+    private static final String REGEX_ENDING_PARENTHESIS_COMA = "\\),\\s\\(";
+    private static final String WKT_REGEX_MULTILINE_STRING="(\\(\\()(.*?)(\\)\\))";
 
 
 

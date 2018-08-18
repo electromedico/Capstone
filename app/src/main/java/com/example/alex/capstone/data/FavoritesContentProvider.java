@@ -8,6 +8,8 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import java.util.Objects;
+
 import static com.example.alex.capstone.data.FavoritesContract.favoritesEntry.buildFavoritesUriWithID;
 
 public class FavoritesContentProvider extends ContentProvider {
@@ -81,7 +83,7 @@ public class FavoritesContentProvider extends ContentProvider {
                         null,
                         values);
                 returnedUri = buildFavoritesUriWithID(id);
-                getContext().getContentResolver().notifyChange(returnedUri,null);
+                Objects.requireNonNull(getContext()).getContentResolver().notifyChange(returnedUri,null);
                 break;
 
             default:throw new UnsupportedOperationException("not yet implemented");
@@ -109,7 +111,7 @@ public class FavoritesContentProvider extends ContentProvider {
 
         if (numRowsDeleted != 0) {
             // A task was deleted, set notification
-            getContext().getContentResolver().notifyChange(uri, null);
+            Objects.requireNonNull(getContext()).getContentResolver().notifyChange(uri, null);
         }
         return numRowsDeleted;
     }
@@ -119,7 +121,7 @@ public class FavoritesContentProvider extends ContentProvider {
         return 0;
     }
 
-    public static UriMatcher buildUriMatcher(){
+    private static UriMatcher buildUriMatcher(){
         final  UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         final String authority = FavoritesContract.CONTENT_AUTHORITY;
         matcher.addURI(authority,FavoritesContract.PATH_FAVORITES,CODE_FAVORITES);

@@ -6,9 +6,6 @@ import com.google.android.gms.maps.model.LatLngBounds;
 
 import org.junit.Test;
 
-import java.io.IOException;
-import java.util.List;
-
 import static com.example.alex.capstone.utils.MapUtils.RADIUS_METERS_ZOOM;
 
 /**

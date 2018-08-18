@@ -14,7 +14,7 @@ public class RoutePlannerResult implements Parcelable
 
     @SerializedName("journeys")
     @Expose
-    private List<Journey> journeys = new ArrayList<Journey>();
+    private List<Journey> journeys = new ArrayList<>();
     @SerializedName("query")
     @Expose
     private Query query;

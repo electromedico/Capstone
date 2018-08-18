@@ -13,7 +13,7 @@
 
     </group>
 
-    <item android:title="About Us">
+    <item android:title="@string/about_us_label">
         <menu>
             <item
                 android:id="@+id/about_this_app"

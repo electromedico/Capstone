@@ -20,7 +20,7 @@ public class Journey_ implements Parcelable
     private ArrivalText arrivalText;
     @SerializedName("chunks")
     @Expose
-    private List<Chunk> chunks = new ArrayList<Chunk>();
+    private List<Chunk> chunks = new ArrayList<>();
     @SerializedName("co2_emissions")
     @Expose
     private String co2Emissions;

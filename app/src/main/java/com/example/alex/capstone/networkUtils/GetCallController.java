@@ -8,14 +8,12 @@ import com.example.alex.capstone.model.GetStopPointsQuery;
 import com.example.alex.capstone.model.GetStopSchedulesQuery;
 import com.example.alex.capstone.model.getJourneysQueryModel.GetJourneyQuery;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.gson.Gson;
-import org.json.JSONException;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import okhttp3.Headers;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -26,7 +24,7 @@ import retrofit2.Retrofit;
 public class GetCallController implements Callback<ResponseBody> {
 
 
-    private Context context;
+    private final Context context;
     private final String apiKey;
     private final TisseoAPI tisseoAPI;
     private final OnTaskCompleted listener;
@@ -35,7 +33,7 @@ public class GetCallController implements Callback<ResponseBody> {
     private static final int GET_STOP_SCHEDULES_TAG = 200;
     private static final int GET_JOURNEYS_TAG=300;
     private static final int GET_PLACES_TAG = 400 ;
-    private Gson gson;
+    private final Gson gson;
 
 
     public GetCallController (Context c, OnTaskCompleted listener) {

@@ -26,7 +26,7 @@ public class Line implements Parcelable
     private String id;
     @SerializedName("message")
     @Expose
-    private List<Message> message = new ArrayList<Message>();
+    private List<Message> message = new ArrayList<>();
     @SerializedName("name")
     @Expose
     private String name;

@@ -14,7 +14,7 @@ public class Departures implements Parcelable
 
     @SerializedName("stopAreas")
     @Expose
-    private List<StopArea> stopAreas = new ArrayList<StopArea>();
+    private List<StopArea> stopAreas = new ArrayList<>();
     public final static Parcelable.Creator<Departures> CREATOR = new Creator<Departures>() {
 
 

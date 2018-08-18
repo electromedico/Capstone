@@ -10,7 +10,7 @@ import android.util.Log;
 import com.example.alex.capstone.data.FavoritesContract;
 
 public class DbReadByIDAsyncTask extends AsyncTaskLoader<Cursor> {
-    private Cursor cursor=null;
+    private final Cursor cursor=null;
     private final String TAG;
     private int id;
 

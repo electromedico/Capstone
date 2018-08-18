@@ -7,15 +7,11 @@
     <string name="not_logged">not_logged</string>
     <string name="log_in_failed">Log in Failed</string>
     <string name="please_try_again">please try again later</string>
-    <string name="title_activity_map">Map</string>
     <string name="go">GO</string>
     <string name="favorites">Favorites</string>
-    <string name="line_map">Line Map</string>
     <string name="menu_icon">Menu Icon</string>
     <string name="start_navigation_icon">Start Navigation Icon</string>
-    <string name="line_map_icon">Line Map Icon</string>
     <string name="favorites_icon">Favorites icon</string>
-    <string name="lines">Lines : </string>
 
     <!--Value of the min zoom level to show and query the bus stops-->
     <string name="map_zoom_level">15.5</string>
@@ -38,16 +34,8 @@
     <string name="retrofit_on_response_log_tag">RetrofitOnResponse</string>
 
     <!--JSON Keys-->
-    <string name="stop_json_key">stop</string>
-    <string name="route_planner_result_json_key">routePlannerResult</string>
-    <string name="stoppoint_json_key">stopPoint</string>
-    <string name="service_get_nearby_stops">ServiceNearbyStops</string>
     <string name="no_stops">There are no nearby Stops</string>
     <string name="camera_key">camera_key</string>
-    <string name="list_physical_stops">list_physical_stops</string>
-    <string name="title_activity_navigation_maps">Directions</string>
-    <string name="title_activity_bus_stop_info_actitivy">BusStopInfoActitivy</string>
-    <string name="title_activity_bus_stop_info">BusStopInfoActivity</string>
     <string name="stop_point_id">stopPointId</string>
     <string name="time_table_by_area">timetableByArea</string>
     <string name="param_time_table_by_area">1</string>
@@ -66,23 +54,35 @@
     <string name="display_best_place">displayBestPlace</string>
     <string name="param_display_best_place">1</string>
     <string name="term">term</string>
-    <string name="suggestion_column">1</string>
     <string name="nav_header_desc">logo</string>
     <string name="nav_header_title">On Y Va</string>
     <string name="nav_header_subtitle">Hi!</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="news_feed">News Feed</string>
     <string name="settings">Settings</string>
-    <string name="share_app">Share App</string>
     <string name="wrong_type_of_wtk">Wrong Type of WTK</string>
     <string name="title_activity_about">About This App</string>
     <string name="about_this_app">About this app</string>
     <string name="about">This app is powered by Tisseo</string>
     <string name="categorie_arret">Arrêts</string>
     <string name="appwidget_text">EXAMPLE</string>
-    <string name="add_widget">Add widget</string>
-    <string name="configure">Configure</string>
     <string name="favorite_json_key">json_fav_key</string>
+    <string name="map_act_move_camera">Map.moveCamera</string>
+    <string name="lat_lng_null">LatLn = null</string>
+    <string name="load_journey">LoadJourneyIntoMap</string>
+    <string name="chunks_is_empty">Chunks is Empty</string>
+    <string name="line_name">Line Name</string>
+    <string name="direction">Direction</string>
+    <string name="waiting_time">Waiting Time</string>
+    <string name="info_view_stop_name_tv">Stop Name</string>
+    <string name="about_us_label">About Us</string>
+    <string name="bus_stop_icon">Bus Icon</string>
+    <string name="desc_background">Background</string>
+    <string name="desc_close">Close Info Window</string>
+    <string name="desc_div_line">Separator</string>
+    <string name="desc_navigation">Goto Button</string>
+    <string name="on_click_go_to_bus_stop">GoToBusStop</string>
+    <string name="mclickmarker_null">The marker is Null</string>
+    <string name="directions_label">Get Directions</string>
+    <string name="add_to_favorites_label">Add to Favorites</string>
 
 </resources>

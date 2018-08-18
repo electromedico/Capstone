@@ -17,7 +17,7 @@ public class Schedule implements Parcelable
     private Destination destination;
     @SerializedName("journeys")
     @Expose
-    private List<Journey> journeys = new ArrayList<Journey>();
+    private List<Journey> journeys = new ArrayList<>();
     @SerializedName("line")
     @Expose
     private Line line;

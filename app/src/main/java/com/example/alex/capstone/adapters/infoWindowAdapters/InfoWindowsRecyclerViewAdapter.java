@@ -1,6 +1,5 @@
 package com.example.alex.capstone.adapters.infoWindowAdapters;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,9 +16,8 @@ import java.util.List;
 public class InfoWindowsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     private List<Schedule> mDataSet;
-    private Context context;
-    public InfoWindowsRecyclerViewAdapter(Context context) {
-        this.context=context;
+
+    public InfoWindowsRecyclerViewAdapter() {
     }
 
     @NonNull
@@ -28,8 +26,7 @@ public class InfoWindowsRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         RecyclerView.ViewHolder viewHolder;
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(R.layout.bus_stop_info_rv_layout, parent, false);
-        BusStopInfoViewHolder busStopInfoViewHolder = new BusStopInfoViewHolder(view);
-        return busStopInfoViewHolder;
+        return new BusStopInfoViewHolder(view);
     }
 
     @Override
@@ -58,7 +55,7 @@ public class InfoWindowsRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
         private TextView mDirectionTv;
         private TextView mNextPassageTv;
 
-        public BusStopInfoViewHolder(View itemView) {
+        BusStopInfoViewHolder(View itemView) {
             super(itemView);
             mlineNameTv = itemView.findViewById(R.id.line_name_tv_bus_stop_info);
             mDirectionTv = itemView.findViewById(R.id.direction_tv_bus_stop_info);

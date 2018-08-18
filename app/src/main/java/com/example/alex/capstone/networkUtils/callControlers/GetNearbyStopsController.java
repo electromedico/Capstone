@@ -20,7 +20,7 @@ import retrofit2.Retrofit;
 
 public class GetNearbyStopsController implements Callback<GetStopPointsQuery>{
 
-    private Context context;
+    private final Context context;
     private final String apiKey;
     private final TisseoAPI tisseoAPI;
     private final OnTaskCompleted listener;
@@ -29,7 +29,7 @@ public class GetNearbyStopsController implements Callback<GetStopPointsQuery>{
     public GetNearbyStopsController(Context c, OnTaskCompleted listener) {
         context=c;
         apiKey = c.getString(R.string.tisseo_api_key);
-        Retrofit client = TisseoApiClient.getClient();;
+        Retrofit client = TisseoApiClient.getClient();
         tisseoAPI= client.create(TisseoAPI.class);
         this.listener=listener;
     }

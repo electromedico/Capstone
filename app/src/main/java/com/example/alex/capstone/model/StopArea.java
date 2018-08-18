@@ -26,7 +26,7 @@ public class StopArea implements Parcelable
     private String name;
     @SerializedName("schedules")
     @Expose
-    private List<Schedule> schedules = new ArrayList<Schedule>();
+    private List<Schedule> schedules = new ArrayList<>();
     @SerializedName("uniqueStopId")
     @Expose
     private String uniqueStopId;

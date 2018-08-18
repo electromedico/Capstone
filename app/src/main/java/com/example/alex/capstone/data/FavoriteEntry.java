@@ -1,5 +1,7 @@
 package com.example.alex.capstone.data;
 
+import com.google.android.gms.maps.model.LatLng;
+
 public class FavoriteEntry {
 
     private int favId;
@@ -14,6 +16,14 @@ public class FavoriteEntry {
         this.lng = lng;
         this.name = name;
         this.categorie = categorie;
+    }
+
+    public LatLng getLatLng(){
+        if (lat!=null && lng !=null){
+            return new LatLng(Double.valueOf(lat),
+                    Double.valueOf(lng));
+        }
+        return null;
     }
 
     public FavoriteEntry() {
