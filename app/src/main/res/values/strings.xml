@@ -56,7 +56,7 @@
     <string name="term">term</string>
     <string name="nav_header_desc">logo</string>
     <string name="nav_header_title">On Y Va</string>
-    <string name="nav_header_subtitle">Hi!</string>
+    <string name="nav_header_subtitle_hi">Hi</string>
     <string name="news_feed">News Feed</string>
     <string name="settings">Settings</string>
     <string name="wrong_type_of_wtk">Wrong Type of WTK</string>
@@ -90,5 +90,8 @@
     <string name="favorites_map_problem">Id not found in the map :</string>
     <string name="delete_failed">Opps something when wrong</string>
     <string name="error_deleting_fav">Error deleting the entry :</string>
+    <string name="log_menu_title">Log</string>
+    <string name="log_in_menu_title">Login</string>
+    <string name="log_out_menu_title">Logout</string>
 
 </resources>

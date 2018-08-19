@@ -16,12 +16,13 @@ import com.example.alex.capstone.activities.map.MapActivity;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.example.alex.capstone.utils.GoogleSignInUtils.RC_SIGN_IN;
+import static com.example.alex.capstone.utils.GoogleSignInUtils.getGoogleSignInClient;
 
 
 /**
@@ -30,8 +31,7 @@ import butterknife.ButterKnife;
 public class LoginActivity extends AppCompatActivity{
 
 
-    //Id Sign In
-    private static final int RC_SIGN_IN = 100;
+
     private static final String TAG = "LOGIN";
 
     //UI
@@ -47,15 +47,8 @@ public class LoginActivity extends AppCompatActivity{
         // Set up the login form.
         ButterKnife.bind(this);
 
-        // Configure sign-in to request the user's ID, email address, and basic
-        // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-
         // Build a GoogleSignInClient with the options specified by gso.
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+        mGoogleSignInClient = getGoogleSignInClient(this);
 
         // Sing In button
         findViewById(R.id.g_plus_sign_in_button).setOnClickListener(new OnClickListener() {

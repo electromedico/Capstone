@@ -4,7 +4,7 @@
     android:initialLayout="@layout/widget_favorites"
     android:minHeight="60dp"
     android:minWidth="300dp"
-    android:previewImage="@drawable/example_appwidget_preview"
+    android:previewImage="@drawable/appwidget_preview"
     android:resizeMode="vertical|horizontal"
     android:updatePeriodMillis="86400000"
     android:widgetCategory="home_screen"/>

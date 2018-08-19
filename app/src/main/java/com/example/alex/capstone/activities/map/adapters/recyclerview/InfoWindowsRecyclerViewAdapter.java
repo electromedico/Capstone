@@ -40,7 +40,7 @@ public class InfoWindowsRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
 
     @Override
     public int getItemCount() {
-        if(mDataSet==null && mDataSet.isEmpty()) return 0;
+        if(mDataSet==null || mDataSet.isEmpty()) return 0;
         return mDataSet.size();
     }
 

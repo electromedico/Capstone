@@ -21,6 +21,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -34,6 +35,7 @@ import android.support.v7.widget.RecyclerView;
 
 import android.support.v7.widget.SearchView;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -66,9 +68,14 @@ import com.example.alex.capstone.model.getJourneysQueryModel.Street;
 import com.example.alex.capstone.networkutils.GetCallController;
 import com.example.alex.capstone.networkutils.OnTaskCompleted;
 import com.example.alex.capstone.networkutils.callControlers.GetNearbyStopsController;
+import com.example.alex.capstone.utils.GoogleSignInUtils;
 import com.example.alex.capstone.utils.LocationUtils;
 import com.example.alex.capstone.utils.MapUtils;
 import com.example.alex.capstone.widget.UpdateWidgetService;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -90,6 +97,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PatternItem;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
@@ -110,6 +118,8 @@ import static com.example.alex.capstone.data.dataUtils.DbUtils.addFavoriteQuery;
 import static com.example.alex.capstone.data.dataUtils.DbUtils.deleteFavoriteQuery;
 import static com.example.alex.capstone.utils.DataUtils.cursorToEntryList;
 import static com.example.alex.capstone.utils.DataUtils.testSingleFavoriteArraySize;
+import static com.example.alex.capstone.utils.GoogleSignInUtils.RC_SIGN_IN;
+import static com.example.alex.capstone.utils.GoogleSignInUtils.getGoogleSignInClient;
 import static com.example.alex.capstone.utils.MapUtils.RADIUS_METERS_ZOOM;
 import static com.example.alex.capstone.utils.MapUtils.calculateBoundingBox;
 import static com.example.alex.capstone.widget.FavoritesWidgetProvider.WIDGET_ID_KEY;
@@ -128,6 +138,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     public static final String LAT_TAG = "LAT";
     public static final String LNG_TAG = "LNG";
     private static final String ID_TAG = "ID";
+    private static final String LOG_IN_MENU_TAG = "LOG_IN_MENU";
 
 
     private GoogleMap mGoogleMap;
@@ -145,6 +156,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private HashMap<String, Object> mMarkerInfoMap = new HashMap<>();
     private boolean mIsFavorite = false;
     private boolean mCalledByFavorites = false;
+    private boolean mIsUserLogged=false;
     private PhysicalStop mPhysicalStop;
     private long mFavoriteId = -1;
     private FavoriteEntry favoriteEntry;
@@ -152,6 +164,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private LocationRequest mLocationRequest;
     private InfoWindowsRecyclerViewAdapter recyclerViewAdapter;
     private Gson gson;
+    private GoogleSignInClient mGoogleSignInClient;
 
 
     @BindView(R.id.favorites_image_button)
@@ -183,11 +196,33 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @BindView(R.id.center_add_fab)
     FloatingActionButton mCenterAddFavoritesFAB;
 
+    TextView mNavUserNameTv;
+    Menu mMenu;
+    MenuItem mMenuItemLog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
         ButterKnife.bind(this);
+        //get oogleSignInClient
+        mGoogleSignInClient=getGoogleSignInClient(this);
+
+        //Get last signed account to manage the nav header
+        View view = mNavigationView.getHeaderView(0);
+        mMenu=mNavigationView.getMenu();
+        mNavUserNameTv=view.findViewById(R.id.nav_user_nav_tv);
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        //If tje user is connected we manage the menu item
+        if (account!= null){
+            mIsUserLogged=true;
+            String userName = account.getGivenName();
+            mNavUserNameTv.setText(getString(R.string.nav_header_subtitle_hi)+ " "+ userName);
+            mMenuItemLog = mMenu.findItem(R.id.log);
+            mMenuItemLog.setTitle(R.string.log_out_menu_title);
+            mMenuItemLog.setIcon(getResources().getDrawable(R.drawable.ic_person_outline_black_24dp,null));
+
+        }
 
         // Get the SupportMapFragment and request notification
         // when the map is ready to be used.
@@ -298,7 +333,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
      * onCreate method to setup the buttons click listeners
      */
     private void setUpButtons() {
-
         mFavoritesIb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -811,107 +845,31 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
 
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-    int optionSelected=item.getItemId();
-        switch (optionSelected) {
-            case R.id.news_feed:
 
-                break;
-            case R.id.about_this_app:
-                Intent intent = new Intent(this, AboutActivity.class);
-                startActivity(intent);
 
-                break;
-            case R.id.settings:
-
-                break;
-        }
-       mDrawerLayout.closeDrawer(GravityCompat.START);
-       return true;
-    }
-
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        }
-        else if (mInfoWindowV.getVisibility() == View.VISIBLE){
-            hideInfoWindow();
+    private void manageSession() {
+        if (mIsUserLogged){
+            signOut();
         }else {
-            Intent a = new Intent(Intent.ACTION_MAIN);
-            a.addCategory(Intent.CATEGORY_HOME);
-            a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(a);
+            singIn();
         }
     }
 
-    @NonNull
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
-        Loader<Cursor> loader =null;
-        switch (id){
-            case FAVORITE_READ_BY_LAT_LNG_LOADER:
-                loader = new DbReadByLatLongNameAsyncTask(MapActivity.this,MAP_ACTIVITY_TAG,args);
-                break;
-            case FAVORITE_READ_BY_ID_LOADER:
-                loader = new DbReadByIDAsyncTask(this,MAP_ACTIVITY_TAG,args.getInt(ID_TAG));
-                break;
-            default: new UnsupportedOperationException("Unknown Loader");
-        }
+    private void singIn() {
 
-        return loader;
+        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+        startActivityForResult(signInIntent, GoogleSignInUtils.RC_SIGN_IN);
     }
 
-    @Override
-    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
-        if (data==null) return;
-        List<FavoriteEntry> list = cursorToEntryList(data);
-        switch(loader.getId()){
-
-            case FAVORITE_READ_BY_LAT_LNG_LOADER:
-                onLoadFinishedReadByLatLng(list);
-                break;
-
-            case FAVORITE_READ_BY_ID_LOADER:
-                onLoadFinishedByID(list);
-
-                break;
-            default: new UnsupportedOperationException("Unknown Loader");
-
-        }
-    }
-
-    private void onLoadFinishedByID(List<FavoriteEntry> entryList) {
-        if (testSingleFavoriteArraySize(entryList)){
-            LatLngBounds latLngBounds = MapUtils.calculateBoundingBox(RADIUS_METERS_ZOOM, mLatLngPosition);
-            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 0));
-            //getCallController.startGetStopSchedules();
-
-        }
-
-    }
-
-    private void onLoadFinishedReadByLatLng(List<FavoriteEntry> entryList) {
-        if (entryList!=null && testSingleFavoriteArraySize(entryList)){
-            mIsFavorite=true;
-            mFavoriteId=entryList.get(0).getFavId();
-            changeIconColor(mIsFavorite);
-        }
-        else {
-            //the Entry does not exist in the DB or more than one
-            mIsFavorite=false;
-            mFavoriteId=-1;
-            changeIconColor(mIsFavorite);
-        }
-    }
-
-
-
-    @Override
-    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
-
+    private void signOut() {
+        mGoogleSignInClient.signOut().addOnCompleteListener(this, new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                mIsUserLogged=false;
+                mMenuItemLog.setIcon(getResources().getDrawable(R.drawable.ic_person_black_24dp));
+                mMenuItemLog.setTitle(getString(R.string.log_in_menu_title));
+            }
+        });
     }
 
     private void manageFavorites(){
@@ -947,8 +905,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     private void goToFavorites(){
-      Intent intent = new Intent(this,FavoritesActivity.class);
-      startActivity(intent);
+        Intent intent = new Intent(this,FavoritesActivity.class);
+        startActivity(intent);
     }
 
     /**
@@ -1013,5 +971,141 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
     }
 
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        int optionSelected=item.getItemId();
+        switch (optionSelected) {
+            case R.id.news_feed:
 
+                break;
+            case R.id.about_this_app:
+                Intent intent = new Intent(this, AboutActivity.class);
+                startActivity(intent);
+
+                break;
+            case R.id.settings:
+
+                break;
+            case R.id.log:
+                manageSession();
+                break;
+        }
+        mDrawerLayout.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        }
+        else if (mInfoWindowV.getVisibility() == View.VISIBLE){
+            hideInfoWindow();
+        }else {
+            Intent a = new Intent(Intent.ACTION_MAIN);
+            a.addCategory(Intent.CATEGORY_HOME);
+            a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(a);
+        }
+    }
+
+    @NonNull
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
+        Loader<Cursor> loader =null;
+        switch (id){
+            case FAVORITE_READ_BY_LAT_LNG_LOADER:
+                loader = new DbReadByLatLongNameAsyncTask(MapActivity.this,MAP_ACTIVITY_TAG,args);
+                break;
+            case FAVORITE_READ_BY_ID_LOADER:
+                loader = new DbReadByIDAsyncTask(this,MAP_ACTIVITY_TAG,args.getInt(ID_TAG));
+                break;
+            default: new UnsupportedOperationException("Unknown Loader");
+        }
+
+        return loader;
+    }
+
+    @Override
+    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
+        if (data==null) return;
+        List<FavoriteEntry> list = cursorToEntryList(data);
+        switch(loader.getId()){
+
+            case FAVORITE_READ_BY_LAT_LNG_LOADER:
+                onLoadFinishedReadByLatLng(list);
+                break;
+
+            case FAVORITE_READ_BY_ID_LOADER:
+                onLoadFinishedByID(list);
+
+                break;
+            default: new UnsupportedOperationException("Unknown Loader");
+
+        }
+    }
+    private void onLoadFinishedByID(List<FavoriteEntry> entryList) {
+        if (testSingleFavoriteArraySize(entryList)){
+            LatLngBounds latLngBounds = MapUtils.calculateBoundingBox(RADIUS_METERS_ZOOM, mLatLngPosition);
+            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 0));
+            //getCallController.startGetStopSchedules();
+
+        }
+
+    }
+
+    private void onLoadFinishedReadByLatLng(List<FavoriteEntry> entryList) {
+        if (entryList!=null && testSingleFavoriteArraySize(entryList)){
+            mIsFavorite=true;
+            mFavoriteId=entryList.get(0).getFavId();
+            changeIconColor(true);
+        }
+        else {
+            //the Entry does not exist in the DB or more than one
+            mIsFavorite=false;
+            mFavoriteId=-1;
+            changeIconColor(false);
+        }
+    }
+
+
+
+    @Override
+    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        if (requestCode == RC_SIGN_IN) {
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+
+            try {
+                // Google Sign In was successful, authenticate with Firebase
+                GoogleSignInAccount account = task.getResult(ApiException.class);
+                //Message Log in Successful
+                showSnackBar(getString(R.string.log_in_successful));
+                //Write to preferences the choice
+
+
+            } catch (ApiException e) {
+                // The ApiException status code indicates the detailed failure reason.
+                // Please refer to the GoogleSignInStatusCodes class reference for more information.
+                Log.w(LOG_IN_MENU_TAG, getString(R.string.log_in_failed) + " code: " + e.getStatusCode());
+
+                //Message Sign in Failed
+                showSnackBar(getString(R.string.log_in_failed) + " " + getString(R.string.please_try_again));
+
+            }
+        }
+    }
+        private void showSnackBar(String msg){
+            Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content),msg,Snackbar.LENGTH_LONG);
+            snackbar.show();
+
+        }
 }
