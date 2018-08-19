@@ -1,13 +1,13 @@
-package com.example.alex.capstone.networkUtils.callControlers;
+package com.example.alex.capstone.networkutils.callControlers;
 
 import android.content.Context;
 import android.util.Log;
 
 import com.example.alex.capstone.R;
 import com.example.alex.capstone.model.GetStopPointsQuery;
-import com.example.alex.capstone.networkUtils.OnTaskCompleted;
-import com.example.alex.capstone.networkUtils.TisseoAPI;
-import com.example.alex.capstone.networkUtils.TisseoApiClient;
+import com.example.alex.capstone.networkutils.OnTaskCompleted;
+import com.example.alex.capstone.networkutils.TisseoAPI;
+import com.example.alex.capstone.networkutils.TisseoApiClient;
 import com.google.android.gms.maps.model.LatLngBounds;
 
 import java.util.HashMap;

@@ -1,4 +1,4 @@
-package com.example.alex.capstone.adapters.searchViewAdapters;
+package com.example.alex.capstone.activities.map.adapters.searchview;
 
 import android.content.Context;
 import android.database.Cursor;

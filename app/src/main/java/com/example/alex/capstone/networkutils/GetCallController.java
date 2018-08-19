@@ -1,4 +1,4 @@
-package com.example.alex.capstone.networkUtils;
+package com.example.alex.capstone.networkutils;
 
 import android.content.Context;
 import android.util.Log;

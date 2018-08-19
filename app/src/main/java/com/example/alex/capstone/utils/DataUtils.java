@@ -1,6 +1,7 @@
 package com.example.alex.capstone.utils;
 
 import android.database.Cursor;
+import android.util.Log;
 
 import com.example.alex.capstone.data.FavoriteEntry;
 import com.example.alex.capstone.data.FavoritesContract;
@@ -33,5 +34,25 @@ public class DataUtils {
             cursor.close();
         }
         return favorites;
+    }
+
+    /**
+     * for the query that should return only one element
+     * @param entryList list recupered by the query
+     * @return boolean true if single element
+     */
+    public static boolean testSingleFavoriteArraySize(List<FavoriteEntry> entryList){
+        if ( entryList==null || entryList.size()<=0){
+            return false;
+        }
+        else if (entryList.size()>1){
+            Log.e(" +1 fav same location", String.valueOf(entryList.size()));
+            return false;
+        }
+        else {
+            return true;
+        }
+
+
     }
 }

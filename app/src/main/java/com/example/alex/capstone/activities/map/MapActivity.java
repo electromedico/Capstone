@@ -1,10 +1,7 @@
-package com.example.alex.capstone;
+package com.example.alex.capstone.activities.map;
 
 import android.Manifest;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.ObjectAnimator;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.DialogInterface;
@@ -46,11 +43,14 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.alex.capstone.adapters.infoWindowAdapters.InfoWindowsRecyclerViewAdapter;
-import com.example.alex.capstone.adapters.searchViewAdapters.SearchSuggestionsAdapter;
+import com.example.alex.capstone.activities.about.AboutActivity;
+import com.example.alex.capstone.activities.favorites.FavoritesActivity;
+import com.example.alex.capstone.activities.MainActivity;
+import com.example.alex.capstone.R;
+import com.example.alex.capstone.activities.map.adapters.recyclerview.InfoWindowsRecyclerViewAdapter;
+import com.example.alex.capstone.activities.map.adapters.searchview.SearchSuggestionsAdapter;
 import com.example.alex.capstone.data.FavoriteEntry;
 import com.example.alex.capstone.data.FavoritesContract;
-import com.example.alex.capstone.data.dataUtils.DbReadAllAsyncTask;
 import com.example.alex.capstone.data.dataUtils.DbReadByIDAsyncTask;
 import com.example.alex.capstone.data.dataUtils.DbReadByLatLongNameAsyncTask;
 import com.example.alex.capstone.model.Departures;
@@ -63,12 +63,12 @@ import com.example.alex.capstone.model.getJourneysQueryModel.Chunk;
 import com.example.alex.capstone.model.getJourneysQueryModel.Service;
 import com.example.alex.capstone.model.getJourneysQueryModel.Stop;
 import com.example.alex.capstone.model.getJourneysQueryModel.Street;
-import com.example.alex.capstone.networkUtils.GetCallController;
-import com.example.alex.capstone.networkUtils.OnTaskCompleted;
-import com.example.alex.capstone.networkUtils.callControlers.GetNearbyStopsController;
+import com.example.alex.capstone.networkutils.GetCallController;
+import com.example.alex.capstone.networkutils.OnTaskCompleted;
+import com.example.alex.capstone.networkutils.callControlers.GetNearbyStopsController;
 import com.example.alex.capstone.utils.LocationUtils;
 import com.example.alex.capstone.utils.MapUtils;
-import com.example.alex.capstone.widgetUtils.UpdateWidgetService;
+import com.example.alex.capstone.widget.UpdateWidgetService;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -104,11 +104,15 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static android.widget.Toast.LENGTH_LONG;
-import static com.example.alex.capstone.adapters.searchViewAdapters.SearchSuggestionsAdapter.SUGESTION_CURSOR_FIELDS;
+import static com.example.alex.capstone.activities.favorites.FavoritesActivity.FAVORITES_ACTIVITY_TAG;
+import static com.example.alex.capstone.activities.map.adapters.searchview.SearchSuggestionsAdapter.SUGESTION_CURSOR_FIELDS;
+import static com.example.alex.capstone.data.dataUtils.DbUtils.addFavoriteQuery;
+import static com.example.alex.capstone.data.dataUtils.DbUtils.deleteFavoriteQuery;
 import static com.example.alex.capstone.utils.DataUtils.cursorToEntryList;
+import static com.example.alex.capstone.utils.DataUtils.testSingleFavoriteArraySize;
 import static com.example.alex.capstone.utils.MapUtils.RADIUS_METERS_ZOOM;
 import static com.example.alex.capstone.utils.MapUtils.calculateBoundingBox;
-import static com.example.alex.capstone.widgetUtils.FavoritesWidgetProvider.WIDGET_ID_KEY;
+import static com.example.alex.capstone.widget.FavoritesWidgetProvider.WIDGET_ID_KEY;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, OnTaskCompleted, GoogleMap.OnCameraIdleListener, NavigationView.OnNavigationItemSelectedListener, LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -117,7 +121,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     // Constants for logging and referring to a unique loader
     private static final String MAP_ACTIVITY_TAG = MainActivity.class.getSimpleName();
-    private static final int FAVORITE_READ_LOADER = 1;
     private static final int FAVORITE_READ_BY_ID_LOADER = 2;
     private static final int FAVORITE_READ_BY_LAT_LNG_LOADER = 3;
 
@@ -131,7 +134,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private FusedLocationProviderClient mFusedLocationClient;
     private Location mLocation = null;
     private LatLng mLatLngPosition;
-    private List<PhysicalStop> mlistPhysicalStops;
+    private List<PhysicalStop> mListPhysicalStops;
     private CameraPosition cameraPosition;
     private Marker mClickMarker;
     private GetCallController getCallController;
@@ -141,13 +144,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private List<Polyline> mPolyLines = new ArrayList<>();
     private HashMap<String, Object> mMarkerInfoMap = new HashMap<>();
     private boolean mIsFavorite = false;
-    private boolean mCalledByWidget = false;
+    private boolean mCalledByFavorites = false;
     private PhysicalStop mPhysicalStop;
     private long mFavoriteId = -1;
     private FavoriteEntry favoriteEntry;
     private LocationCallback mLocationCallback;
     private LocationRequest mLocationRequest;
     private InfoWindowsRecyclerViewAdapter recyclerViewAdapter;
+    private Gson gson;
 
 
     @BindView(R.id.favorites_image_button)
@@ -215,10 +219,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         ///check for who launched the activity
         Bundle intentExtras = getIntent().getExtras();
         if (intentExtras != null) {
+            gson = new Gson();
             if (intentExtras.containsKey(WIDGET_ID_KEY)) {
-                mCalledByWidget = true;
-                Gson gson = new Gson();
+                mCalledByFavorites = true;
                 favoriteEntry = gson.fromJson(intentExtras.getString(getString(R.string.favorite_json_key)), FavoriteEntry.class);
+            }
+            else if(intentExtras.containsKey(FAVORITES_ACTIVITY_TAG)){
+                mCalledByFavorites = true;
+                favoriteEntry = gson.fromJson(intentExtras.getString(FAVORITES_ACTIVITY_TAG), FavoriteEntry.class);
             }
         }
 
@@ -229,8 +237,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         // use a linear layout manager
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        // specify an adapter (see also next example)
-
+        // specify an adapter
         recyclerViewAdapter = new InfoWindowsRecyclerViewAdapter();
         mRecyclerView.setAdapter(recyclerViewAdapter);
 
@@ -295,7 +302,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mFavoritesIb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getAllFavorites();
+                goToFavorites();
             }
         });
 
@@ -479,10 +486,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         enableGoogleMapMyLocation();
         //If the activity was called by the widget we focus the favorite location instead
-        if (mCalledByWidget) {
+        if (mCalledByFavorites) {
             moveCamera(favoriteEntry.getLatLng());
             //Only used for on create
-            mCalledByWidget = false;
+            mCalledByFavorites = false;
         } else {
             if (!moveCamera(mLatLngPosition))getLastLocation();
 
@@ -690,8 +697,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     private void loadInfoToMap(PhysicalStops physicalStops){
         if (physicalStops != null && !physicalStops.getPhysicalStop().isEmpty()) {
-            mlistPhysicalStops = physicalStops.getPhysicalStop();
-            for (PhysicalStop physicalStop : mlistPhysicalStops) {
+            mListPhysicalStops = physicalStops.getPhysicalStop();
+            for (PhysicalStop physicalStop : mListPhysicalStops) {
 
                 //The API has inverted the lat and long values
                 Double x = Double.valueOf(physicalStop.getX());
@@ -751,31 +758,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private void hideInfoWindow(){
         mClickMarker=null;
         mBottomBarV.setVisibility(View.VISIBLE);
-        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(mInfoWindowV,"translationY",100f);
-        objectAnimator.setDuration(1000);
-        objectAnimator.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-                
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-
-            }
-        });
-        mInfoWindowV.animate().translationY(mInfoWindowV.getHeight()).setDuration(1000).start();
-        //mInfoWindowV.setVisibility(View.GONE);
+        mInfoWindowV.setVisibility(View.GONE);
         mCenterAddFavoritesFAB.setVisibility(View.GONE);
     }
 
@@ -872,9 +855,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             case FAVORITE_READ_BY_LAT_LNG_LOADER:
                 loader = new DbReadByLatLongNameAsyncTask(MapActivity.this,MAP_ACTIVITY_TAG,args);
                 break;
-            case FAVORITE_READ_LOADER:
-                loader = new DbReadAllAsyncTask(this,MAP_ACTIVITY_TAG);
-                break;
             case FAVORITE_READ_BY_ID_LOADER:
                 loader = new DbReadByIDAsyncTask(this,MAP_ACTIVITY_TAG,args.getInt(ID_TAG));
                 break;
@@ -892,15 +872,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
             case FAVORITE_READ_BY_LAT_LNG_LOADER:
                 onLoadFinishedReadByLatLng(list);
-                break;
-
-            case FAVORITE_READ_LOADER:
-                if (data.getCount()<=0){
-                    //todo no favs
-                }else {
-                    //todo all favs
-                    list.size();
-                }
                 break;
 
             case FAVORITE_READ_BY_ID_LOADER:
@@ -923,7 +894,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     private void onLoadFinishedReadByLatLng(List<FavoriteEntry> entryList) {
-        if (testSingleFavoriteArraySize(entryList)){
+        if (entryList!=null && testSingleFavoriteArraySize(entryList)){
             mIsFavorite=true;
             mFavoriteId=entryList.get(0).getFavId();
             changeIconColor(mIsFavorite);
@@ -936,25 +907,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
     }
 
-    /**
-     * for the query that should return only one element
-     * @param entryList list recupered by the query
-     * @return boolean true if single element
-     */
-    private boolean testSingleFavoriteArraySize(List<FavoriteEntry> entryList){
-        if ( entryList==null || entryList.size()<=0){
-        return false;
-        }
-        else if (entryList.size()>1){
-            Log.e(" +1 fav same location", String.valueOf(entryList.size()));
-            return false;
-        }
-        else {
-            return true;
-        }
 
-
-    }
 
     @Override
     public void onLoaderReset(@NonNull Loader<Cursor> loader) {
@@ -964,40 +917,38 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private void manageFavorites(){
 
         if (mIsFavorite){
-            int sqlCode=deleteFavorite(mFavoriteId);
+            int sqlCode= deleteFavoriteQuery(this,mFavoriteId);
             if (sqlCode >0){
-                changeIconColor(false);
                 mIsFavorite=false;
+
+
             }else {
                 Log.e("DELETE FAILED","something went wrong deleting the favorite");
 
             }
         }else {
-           Uri uri =addFavorite();
+
+            ContentValues contentValues =createFavoriteContentValues();
+            Uri uri = addFavoriteQuery(this,contentValues);
             if (uri!=null){
                 long returnedId = ContentUris.parseId(uri);
                 if (returnedId>=0){
                     mIsFavorite=true;
-                    changeIconColor(true);
                     mFavoriteId=returnedId;
                 }else {
                     Log.e("INSERT FAILED","something went wrong inserting the favorite");
                 }
             }
         }
-
+        changeIconColor(mIsFavorite);
         //We update the favorites Widgets
         UpdateWidgetService.startActionUpdatePlantWidgets(this);
 
     }
 
-    private void getAllFavorites(){
-       if (getSupportLoaderManager().getLoader(FAVORITE_READ_LOADER)!=null){
-           getSupportLoaderManager().restartLoader(FAVORITE_READ_LOADER,null,this);
-       }else {
-           getSupportLoaderManager().initLoader(FAVORITE_READ_LOADER,null,this);
-       }
-
+    private void goToFavorites(){
+      Intent intent = new Intent(this,FavoritesActivity.class);
+      startActivity(intent);
     }
 
     /**
@@ -1029,30 +980,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     }
 
-    /**
-     *Allow to delete the favorite by its ID
-     * @param id favorite ID
-     */
-    private int deleteFavorite(Long id){
-        return  getContentResolver().delete(
-                FavoritesContract.favoritesEntry.buildFavoritesUriWithID(id),
-                null,
-                null
-        );
-
-    }
-
-    private Uri addFavorite(){
-        ContentValues contentValues = createFavoriteContentValues();
-        return  getContentResolver().insert(
-                FavoritesContract.favoritesEntry.CONTENT_URI,
-                contentValues
-        );
-
-
-
-    }
-
     private ContentValues createFavoriteContentValues() {
         ContentValues contentValues = new ContentValues();
         contentValues.put(FavoritesContract.favoritesEntry.COLUMN_LAT,mClickMarker.getPosition().latitude);
@@ -1073,7 +1000,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     private void changeIconColor(Boolean isFavorite){
-
         if (isFavorite){
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 mCenterAddFavoritesFAB.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorAccent,null)));

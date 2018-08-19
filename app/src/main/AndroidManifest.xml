@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
+
     <uses-feature android:name="android.permission.LOCATION_HARDWARE" />
 
     <application
@@ -14,9 +15,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,9 +24,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
-            android:name=".LoginActivity"
+            android:name=".activities.login.LoginActivity"
             android:label="@string/title_activity_login"
             android:screenOrientation="portrait" />
 
@@ -38,25 +37,24 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name=".MapActivity"
+            android:name=".activities.map.MapActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".AboutActivity"
+            android:name=".activities.about.AboutActivity"
             android:label="@string/title_activity_about"
-            android:parentActivityName=".MapActivity"
+            android:parentActivityName=".activities.map.MapActivity"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.alex.capstone.MapActivity" />
+                android:value="com.example.alex.capstone.activities.map.MapActivity" />
         </activity>
 
         <provider
             android:name=".data.FavoritesContentProvider"
             android:authorities="com.example.alex.capstone"
-            android:exported="true"
-            />
+            android:exported="true" />
 
-        <receiver android:name=".widgetUtils.FavoritesWidgetProvider">
+        <receiver android:name=".widget.FavoritesWidgetProvider">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -67,12 +65,19 @@
         </receiver>
 
         <service
-            android:name=".widgetUtils.ListWidgetService"
-            android:permission="android.permission.BIND_REMOTEVIEWS"
-            />
+            android:name=".widget.ListWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+        <service android:name=".widget.UpdateWidgetService" />
 
-        <service android:name=".widgetUtils.UpdateWidgetService" />
-
+        <activity
+            android:name=".activities.favorites.FavoritesActivity"
+            android:label="@string/title_activity_favorites"
+            android:parentActivityName=".activities.map.MapActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.alex.capstone.activities.map.MapActivity" />
+        </activity>
     </application>
 
 </manifest>

@@ -64,7 +64,7 @@
     <string name="about_this_app">About this app</string>
     <string name="about">This app is powered by Tisseo</string>
     <string name="categorie_arret">Arrêts</string>
-    <string name="appwidget_text">EXAMPLE</string>
+    <string name="appwidget_text">My Favorites</string>
     <string name="favorite_json_key">json_fav_key</string>
     <string name="map_act_move_camera">Map.moveCamera</string>
     <string name="lat_lng_null">LatLn = null</string>
@@ -84,5 +84,11 @@
     <string name="mclickmarker_null">The marker is Null</string>
     <string name="directions_label">Get Directions</string>
     <string name="add_to_favorites_label">Add to Favorites</string>
+    <string name="title_activity_favorites">My Favorites</string>
+    <string name="rv_string_entry">Favorite_Entry</string>
+    <string name="no_favorites">You dont have any Favorites yet!</string>
+    <string name="favorites_map_problem">Id not found in the map :</string>
+    <string name="delete_failed">Opps something when wrong</string>
+    <string name="error_deleting_fav">Error deleting the entry :</string>
 
 </resources>

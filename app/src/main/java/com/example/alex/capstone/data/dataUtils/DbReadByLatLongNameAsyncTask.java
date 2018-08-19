@@ -10,8 +10,8 @@ import android.util.Log;
 
 import com.example.alex.capstone.data.FavoritesContract;
 
-import static com.example.alex.capstone.MapActivity.LAT_TAG;
-import static com.example.alex.capstone.MapActivity.LNG_TAG;
+import static com.example.alex.capstone.activities.map.MapActivity.LAT_TAG;
+import static com.example.alex.capstone.activities.map.MapActivity.LNG_TAG;
 
 public class DbReadByLatLongNameAsyncTask extends AsyncTaskLoader<Cursor> {
     private Cursor cursor;

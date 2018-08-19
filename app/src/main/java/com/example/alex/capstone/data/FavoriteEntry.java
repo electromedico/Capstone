@@ -4,7 +4,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class FavoriteEntry {
 
-    private int favId;
+    private long favId;
     private String lat;
     private String lng;
     private String name;
@@ -29,11 +29,11 @@ public class FavoriteEntry {
     public FavoriteEntry() {
     }
 
-    public int getFavId() {
+    public long getFavId() {
         return favId;
     }
 
-    public void setFavId(int favId) {
+    public void setFavId(long favId) {
         this.favId = favId;
     }
 

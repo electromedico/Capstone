@@ -1,4 +1,4 @@
-package com.example.alex.capstone;
+package com.example.alex.capstone.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -6,6 +6,9 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.example.alex.capstone.R;
+import com.example.alex.capstone.activities.login.LoginActivity;
+import com.example.alex.capstone.activities.map.MapActivity;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 

@@ -1,4 +1,4 @@
-package com.example.alex.capstone.adapters.infoWindowAdapters;
+package com.example.alex.capstone.activities.map.adapters.recyclerview;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -25,7 +25,7 @@ public class InfoWindowsRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         RecyclerView.ViewHolder viewHolder;
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View view = inflater.inflate(R.layout.bus_stop_info_rv_layout, parent, false);
+        View view = inflater.inflate(R.layout.rv_infowindow_bus_stop_layout, parent, false);
         return new BusStopInfoViewHolder(view);
     }
 

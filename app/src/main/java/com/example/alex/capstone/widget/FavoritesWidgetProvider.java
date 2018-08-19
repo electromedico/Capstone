@@ -1,4 +1,4 @@
-package com.example.alex.capstone.widgetUtils;
+package com.example.alex.capstone.widget;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -7,9 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
 
-import com.example.alex.capstone.MapActivity;
+import com.example.alex.capstone.activities.map.MapActivity;
 import com.example.alex.capstone.R;
-import com.example.alex.capstone.widgetUtils.ListWidgetService;
 
 /**
  * Implementation of App Widget functionality.
@@ -22,7 +21,7 @@ public class FavoritesWidgetProvider extends AppWidgetProvider {
                                 int appWidgetId) {
 
         // Construct the RemoteViews object
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.favorites_widget);
+        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_favorites);
 
         //Set the ListWidgetService to act as the adapter for the listview
         Intent intent = new Intent(context, ListWidgetService.class);

@@ -1,4 +1,4 @@
-package com.example.alex.capstone.networkUtils;
+package com.example.alex.capstone.networkutils;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;

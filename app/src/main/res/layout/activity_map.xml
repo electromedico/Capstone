@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.DrawerLayout
     tools:ignore="UselessParent"
-    tools:context=".MapActivity"
+    tools:context=".activities.map.MapActivity"
     android:orientation="vertical"
     android:theme="@style/MapActivityTheme"
     xmlns:android="http://schemas.android.com/apk/res/android"

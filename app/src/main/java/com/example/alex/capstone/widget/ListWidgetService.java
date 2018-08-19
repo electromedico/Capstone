@@ -1,4 +1,4 @@
-package com.example.alex.capstone.widgetUtils;
+package com.example.alex.capstone.widget;
 
 import android.content.Context;
 import android.content.Intent;
@@ -6,7 +6,7 @@ import android.database.Cursor;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
-import com.example.alex.capstone.MapActivity;
+import com.example.alex.capstone.activities.map.MapActivity;
 import com.example.alex.capstone.R;
 import com.example.alex.capstone.data.FavoriteEntry;
 import com.example.alex.capstone.data.FavoritesContract;
@@ -14,7 +14,7 @@ import com.google.gson.Gson;
 
 import java.util.List;
 
-import static com.example.alex.capstone.widgetUtils.FavoritesWidgetProvider.WIDGET_ID_KEY;
+import static com.example.alex.capstone.widget.FavoritesWidgetProvider.WIDGET_ID_KEY;
 import static com.example.alex.capstone.utils.DataUtils.cursorToEntryList;
 
 public class ListWidgetService extends RemoteViewsService {
@@ -67,13 +67,13 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory{
 
     @Override
     public int getCount() {
-        if (favoriteEntries== null && favoriteEntries.size()<=0)return 0;
+        if (favoriteEntries== null || favoriteEntries.size()<=0)return 0;
         return favoriteEntries.size();
     }
 
     @Override
     public RemoteViews getViewAt(int position) {
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.favorites_list_widget_layout);
+        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_favorites_list_layout);
         if (favoriteEntries != null && favoriteEntries.size()>0){
             FavoriteEntry entry= favoriteEntries.get(position);
             views.setTextViewText(R.id.favorite_widget_tv,entry.getName());

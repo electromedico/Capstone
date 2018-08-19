@@ -1,4 +1,4 @@
-package com.example.alex.capstone.widgetUtils;
+package com.example.alex.capstone.widget;
 
 import android.app.IntentService;
 import android.appwidget.AppWidgetManager;

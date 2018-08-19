@@ -1,4 +1,4 @@
-package com.example.alex.capstone.networkUtils;
+package com.example.alex.capstone.networkutils;
 
 import com.example.alex.capstone.model.Departures;
 import com.example.alex.capstone.model.getJourneysQueryModel.Journey;
