@@ -17,13 +17,13 @@ public class FavoritesWidgetProvider extends AppWidgetProvider {
 
     public static final String WIDGET_ID_KEY="widget_id";
 
-    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-                                int appWidgetId) {
+    private static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
+                                        int appWidgetId) {
 
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_favorites);
 
-        //Set the ListWidgetService to act as the adapter for the listview
+        //Set the ListWidgetService to act as the adapter for the ListView
         Intent intent = new Intent(context, ListWidgetService.class);
         views.setRemoteAdapter(R.id.widget_list_view,intent);
 

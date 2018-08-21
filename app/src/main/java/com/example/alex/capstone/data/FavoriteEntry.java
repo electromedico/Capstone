@@ -8,14 +8,14 @@ public class FavoriteEntry {
     private String lat;
     private String lng;
     private String name;
-    private String categorie;
+    private String category;
 
-    public FavoriteEntry(int favId, String lat, String lng, String name, String categorie) {
+    public FavoriteEntry(int favId, String lat, String lng, String name, String category) {
         this.favId = favId;
         this.lat = lat;
         this.lng = lng;
         this.name = name;
-        this.categorie = categorie;
+        this.category = category;
     }
 
     public LatLng getLatLng(){
@@ -61,11 +61,11 @@ public class FavoriteEntry {
         this.name = name;
     }
 
-    public String getCategorie() {
-        return categorie;
+    public String getCategory() {
+        return category;
     }
 
-    public void setCategorie(String categorie) {
-        this.categorie = categorie;
+    public void setCategory(String category) {
+        this.category = category;
     }
 }

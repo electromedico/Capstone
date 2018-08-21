@@ -36,7 +36,7 @@ public class DbReadAllAsyncTask extends AsyncTaskLoader<Cursor> {
                     null,
                     null,
                     null,
-                    FavoritesContract.favoritesEntry.COLUMN_CATEGORIE,
+                    FavoritesContract.favoritesEntry.COLUMN_CATEGORY,
                     null
             );
         }catch (Exception e){

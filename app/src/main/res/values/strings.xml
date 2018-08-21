@@ -1,12 +1,49 @@
 <resources>
-    <string name="app_name">Capstone</string>
-    <string name="title_activity_login">Sign in</string>
 
-    <string name="log_in_successful">Log in Successful</string>
-    <string name="not_now">Skip Sing In</string>
+    <string name="app_name">Capstone</string>
+
+    <!--Main Activity Strings-->
     <string name="not_logged">not_logged</string>
+
+    <!--Login Activity Strings-->
+    <string name="log_in_successful">Log in Successful</string>
     <string name="log_in_failed">Log in Failed</string>
     <string name="please_try_again">please try again later</string>
+
+    <!--activity_login Strings-->
+    <string name="title_activity_login">Sign in</string>
+    <string name="not_now">Skip Sing In</string>
+
+    <!--About Activity-->
+
+    <!--activity_about-->
+    <string name="about">This app is powered by Tisseo</string>
+    <string name="title_activity_about">About This App</string>
+
+    <!--Favorites Activity-->
+    <string name="delete_failed">Opps something when wrong</string>
+    <string name="no_favorites">You dont have any Favorites yet!</string>
+    <!--Favorites Activity Error Message-->
+
+    <string name="favorites_map_problem">Id not found in the map :</string>
+
+    <!--Map Activity-->
+    <string name="camera_key">camera_key</string>
+    <string name="permission_is_needed">Permission needed</string>
+    <string name="why_permission_is_needed">We rely heavily on location to offer you our services</string>
+    <string name="ok_button">OK</string>
+    <string name="cancel_button">Cancel</string>
+    <string name="no_journeys_found">No Journeys found</string>
+    <string name="no_stops">There are no nearby Stops</string>
+    <string name="category_arret">Arrêts</string>
+
+    <!--Map Activity Message Errors-->
+    <string name="on_click_go_to_bus_stop">GoToBusStop</string>
+    <string name="mclickmarker_null">The marker is Null</string>
+    <string name="load_journey">LoadJourneyIntoMap </string>
+    <string name="chunks_is_empty">Chunks is Empty</string>
+
+
     <string name="go">GO</string>
     <string name="favorites">Favorites</string>
     <string name="menu_icon">Menu Icon</string>
@@ -29,13 +66,11 @@
 
     <!--errors msgs-->
     <string name="on_response_retrofit_nearby_stops">Nearby Stops Controller</string>
-    <string name="on_response_excepion">getQuery or getQuery.Object() null</string>
+    <string name="on_response_exception">getQuery or getQuery.Object() null</string>
     <string name="retrofit_on_failure_log_tag">RetrofitOnFailure</string>
     <string name="retrofit_on_response_log_tag">RetrofitOnResponse</string>
 
     <!--JSON Keys-->
-    <string name="no_stops">There are no nearby Stops</string>
-    <string name="camera_key">camera_key</string>
     <string name="stop_point_id">stopPointId</string>
     <string name="time_table_by_area">timetableByArea</string>
     <string name="param_time_table_by_area">1</string>
@@ -56,20 +91,16 @@
     <string name="term">term</string>
     <string name="nav_header_desc">logo</string>
     <string name="nav_header_title">On Y Va</string>
-    <string name="nav_header_subtitle_hi">Hi</string>
+    <string name="nav_header_subtitle_hi">Hi </string>
     <string name="news_feed">News Feed</string>
     <string name="settings">Settings</string>
     <string name="wrong_type_of_wtk">Wrong Type of WTK</string>
-    <string name="title_activity_about">About This App</string>
+
     <string name="about_this_app">About this app</string>
-    <string name="about">This app is powered by Tisseo</string>
-    <string name="categorie_arret">Arrêts</string>
+
     <string name="appwidget_text">My Favorites</string>
     <string name="favorite_json_key">json_fav_key</string>
-    <string name="map_act_move_camera">Map.moveCamera</string>
-    <string name="lat_lng_null">LatLn = null</string>
-    <string name="load_journey">LoadJourneyIntoMap</string>
-    <string name="chunks_is_empty">Chunks is Empty</string>
+
     <string name="line_name">Line Name</string>
     <string name="direction">Direction</string>
     <string name="waiting_time">Waiting Time</string>
@@ -80,18 +111,33 @@
     <string name="desc_close">Close Info Window</string>
     <string name="desc_div_line">Separator</string>
     <string name="desc_navigation">Goto Button</string>
-    <string name="on_click_go_to_bus_stop">GoToBusStop</string>
-    <string name="mclickmarker_null">The marker is Null</string>
+
+
     <string name="directions_label">Get Directions</string>
     <string name="add_to_favorites_label">Add to Favorites</string>
     <string name="title_activity_favorites">My Favorites</string>
     <string name="rv_string_entry">Favorite_Entry</string>
-    <string name="no_favorites">You dont have any Favorites yet!</string>
-    <string name="favorites_map_problem">Id not found in the map :</string>
-    <string name="delete_failed">Opps something when wrong</string>
-    <string name="error_deleting_fav">Error deleting the entry :</string>
     <string name="log_menu_title">Log</string>
     <string name="log_in_menu_title">Login</string>
     <string name="log_out_menu_title">Logout</string>
+    <string name="rv_favorite_label">Favorite Label</string>
+    <string name="app_logo">App logo</string>
+
+    <string name="on_response_response_body_null">response.body() is null</string>
+
+    <!--Generic Message Errors-->
+    <string name="unknown_loader">Unknown Loader: </string>
+    <string name="on_load_finished">onLoadFinished</string>
+    <string name="on_create_loader">onCreateLoader</string>
+    <string name="error_deleting_fav">Error deleting the entry :</string>
+    <string name="insert_failed">INSERT FAILED :</string>
+
+    <string name="unsupported_viewholder">Unsupported ViewHolder: </string>
+    <string name="chose_a_point_in_the_map">Choose a point in the map</string>
+
+    <!--Generic Toast Messages-->
+    <string name="something_went_wrong">Ops something went wrong!</string>
+    <string name="log_out_succsesfull">Log out Sucsessfulll</string>
+
 
 </resources>

@@ -47,8 +47,8 @@ public class GetPlacesQuery implements Parcelable
 
     /**
      * 
-     * @param expirationDate
-     * @param placesList
+     * @param expirationDate Expiration date sent by the API
+     * @param placesList List of places
      */
     public GetPlacesQuery(String expirationDate, PlacesList placesList) {
         super();

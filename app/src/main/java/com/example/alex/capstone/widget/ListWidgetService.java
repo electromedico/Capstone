@@ -53,7 +53,7 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory{
                     null,
                     null,
                     null,
-                    FavoritesContract.favoritesEntry.COLUMN_CATEGORIE,
+                    FavoritesContract.favoritesEntry.COLUMN_CATEGORY,
                     null);
         favoriteEntries = cursorToEntryList(cursor);
 

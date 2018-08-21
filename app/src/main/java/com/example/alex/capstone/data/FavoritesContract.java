@@ -19,7 +19,7 @@ public class FavoritesContract {
         public static final String COLUMN_LAT = "lat";
         public static final String COLUMN_LNG = "lng";
         public static final String COLUMN_NAME="name";
-        public static final String COLUMN_CATEGORIE = "categorie";
+        public static final String COLUMN_CATEGORY = "categorie";
         public static final String COLUMN_TIMESTAMP = "timestamp";
 
         public static Uri buildFavoritesUriWithID(Long id) {

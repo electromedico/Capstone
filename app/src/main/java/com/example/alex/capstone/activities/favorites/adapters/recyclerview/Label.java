@@ -1,6 +1,6 @@
 package com.example.alex.capstone.activities.favorites.adapters.recyclerview;
 
-public class Label {
+class Label {
     private String label;
     public Label() {
     }

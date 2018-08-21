@@ -6,6 +6,7 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.database.Cursor;
@@ -17,6 +18,7 @@ import android.graphics.drawable.VectorDrawable;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -47,7 +49,6 @@ import android.widget.Toast;
 
 import com.example.alex.capstone.activities.about.AboutActivity;
 import com.example.alex.capstone.activities.favorites.FavoritesActivity;
-import com.example.alex.capstone.activities.MainActivity;
 import com.example.alex.capstone.R;
 import com.example.alex.capstone.activities.map.adapters.recyclerview.InfoWindowsRecyclerViewAdapter;
 import com.example.alex.capstone.activities.map.adapters.searchview.SearchSuggestionsAdapter;
@@ -113,7 +114,7 @@ import butterknife.ButterKnife;
 
 import static android.widget.Toast.LENGTH_LONG;
 import static com.example.alex.capstone.activities.favorites.FavoritesActivity.FAVORITES_ACTIVITY_TAG;
-import static com.example.alex.capstone.activities.map.adapters.searchview.SearchSuggestionsAdapter.SUGESTION_CURSOR_FIELDS;
+import static com.example.alex.capstone.activities.map.adapters.searchview.SearchSuggestionsAdapter.SUGGESTION_CURSOR_FIELDS;
 import static com.example.alex.capstone.data.dataUtils.DbUtils.addFavoriteQuery;
 import static com.example.alex.capstone.data.dataUtils.DbUtils.deleteFavoriteQuery;
 import static com.example.alex.capstone.utils.DataUtils.cursorToEntryList;
@@ -126,11 +127,12 @@ import static com.example.alex.capstone.widget.FavoritesWidgetProvider.WIDGET_ID
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, OnTaskCompleted, GoogleMap.OnCameraIdleListener, NavigationView.OnNavigationItemSelectedListener, LoaderManager.LoaderCallbacks<Cursor> {
 
+    //MapActivity TAG
+    private static final String MAP_ACTIVITY_TAG=MapActivity.class.getSimpleName();
     //Constant for PERMISSIONS_REQUEST
     private static final int MY_PERMISSIONS_REQUEST_LOCATION = 100;
 
     // Constants for logging and referring to a unique loader
-    private static final String MAP_ACTIVITY_TAG = MainActivity.class.getSimpleName();
     private static final int FAVORITE_READ_BY_ID_LOADER = 2;
     private static final int FAVORITE_READ_BY_LAT_LNG_LOADER = 3;
 
@@ -163,7 +165,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private LocationCallback mLocationCallback;
     private LocationRequest mLocationRequest;
     private InfoWindowsRecyclerViewAdapter recyclerViewAdapter;
-    private Gson gson;
     private GoogleSignInClient mGoogleSignInClient;
 
 
@@ -205,7 +206,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
         ButterKnife.bind(this);
-        //get oogleSignInClient
+        //get GoogleSignInClient
         mGoogleSignInClient=getGoogleSignInClient(this);
 
         //Get last signed account to manage the nav header
@@ -217,7 +218,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         if (account!= null){
             mIsUserLogged=true;
             String userName = account.getGivenName();
-            mNavUserNameTv.setText(getString(R.string.nav_header_subtitle_hi)+ " "+ userName);
+            String navUserText= getString(R.string.nav_header_subtitle_hi).concat(userName);
+            mNavUserNameTv.setText(navUserText);
             mMenuItemLog = mMenu.findItem(R.id.log);
             mMenuItemLog.setTitle(R.string.log_out_menu_title);
             mMenuItemLog.setIcon(getResources().getDrawable(R.drawable.ic_person_outline_black_24dp,null));
@@ -254,7 +256,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         ///check for who launched the activity
         Bundle intentExtras = getIntent().getExtras();
         if (intentExtras != null) {
-            gson = new Gson();
+            Gson gson = new Gson();
             if (intentExtras.containsKey(WIDGET_ID_KEY)) {
                 mCalledByFavorites = true;
                 favoriteEntry = gson.fromJson(intentExtras.getString(getString(R.string.favorite_json_key)), FavoriteEntry.class);
@@ -345,7 +347,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             public void onClick(View v) {
 
                 if (mClickMarker == null) {
-                    Toast.makeText(MapActivity.this, "Choose a point in the map", LENGTH_LONG).show();
+                    Toast.makeText(MapActivity.this, getString(R.string.chose_a_point_in_the_map), LENGTH_LONG).show();
                 } else {
                     callGetJourney(mClickMarker);
                 }
@@ -392,9 +394,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             @Override
             public void onClick(View v) {
                 if (mClickMarker == null) {
-                    Log.e(getString(R.string.on_click_go_to_bus_stop),
+                    Log.e(MAP_ACTIVITY_TAG,getString(R.string.on_click_go_to_bus_stop) +
                             getString(R.string.mclickmarker_null));
-                    Toast.makeText(MapActivity.this,"Ops something went wrong",LENGTH_LONG);
+                    Toast.makeText(MapActivity.this,getString(R.string.something_went_wrong),LENGTH_LONG).show();
                 } else {
                     callGetJourney(mClickMarker);
                     hideInfoWindow();
@@ -405,14 +407,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     /**
-     * On create method to setup the SerachView
+     * On create method to setup the SearchView
      */
     private void setUpSearchView() {
         //Set the suggestions adapter
         searchView.setSuggestionsAdapter(
                 new SearchSuggestionsAdapter(this,
                         R.layout.suggestions_item_layout,
-                        new MatrixCursor(SUGESTION_CURSOR_FIELDS),
+                        new MatrixCursor(SUGGESTION_CURSOR_FIELDS),
                         new int[]{R.id.suggestion_tv}));
 
         searchView.setOnQueryTextListener(new android.support.v7.widget.SearchView.OnQueryTextListener() {
@@ -429,11 +431,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     getCallController.startGetPlaces(newText);
                 } else {
                     //cleat the suggestions list
-                    searchView.getSuggestionsAdapter().swapCursor(new MatrixCursor(SUGESTION_CURSOR_FIELDS));
+                    searchView.getSuggestionsAdapter().swapCursor(new MatrixCursor(SUGGESTION_CURSOR_FIELDS));
                 }
                 return true;
             }
         });
+
         searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
             @Override
             public boolean onSuggestionSelect(int position) {
@@ -464,9 +467,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mGoogleMap = googleMap;
         if (cameraPosition != null)
             mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
         mGoogleMap.setPadding(0, mapsPadding, 0, mapsPadding);
         mGoogleMap.setOnCameraIdleListener(this);
+
         UiSettings mUiSettings = mGoogleMap.getUiSettings();
         mUiSettings.setCompassEnabled(true);
         mUiSettings.setMyLocationButtonEnabled(false);
@@ -518,7 +521,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         });
 
+        //Enable user location Marker
         enableGoogleMapMyLocation();
+
         //If the activity was called by the widget we focus the favorite location instead
         if (mCalledByFavorites) {
             moveCamera(favoriteEntry.getLatLng());
@@ -606,7 +611,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             //we fill the list
             placeList = placesList.getPlace();
             //MatrixCursor SetUp
-            MatrixCursor suggestionsCursor = new MatrixCursor(SUGESTION_CURSOR_FIELDS);
+            MatrixCursor suggestionsCursor = new MatrixCursor(SUGGESTION_CURSOR_FIELDS);
 
             //we loop the placeList
             for (int i = 0; i < placeList.size(); i++) {
@@ -624,9 +629,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission_group.LOCATION)) {
 
             new AlertDialog.Builder(this)
-                    .setTitle("Permission needed")
-                    .setMessage("this is needed")
-                    .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                    .setTitle(getString(R.string.permission_is_needed))
+                    .setMessage(getString(R.string.why_permission_is_needed))
+                    .setPositiveButton(getString(R.string.ok_button), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             ActivityCompat.requestPermissions(MapActivity.this,
@@ -634,7 +639,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                                     MY_PERMISSIONS_REQUEST_LOCATION);
                         }
                     })
-                    .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                    .setNegativeButton(getString(R.string.cancel_button), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
@@ -682,11 +687,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 }
             } catch (IOException e) {
                 e.printStackTrace();
-                Log.e(getString(R.string.load_journey),getString(R.string.chunks_is_empty));
+                Log.e(MAP_ACTIVITY_TAG,getString(R.string.load_journey)
+                        +getString(R.string.chunks_is_empty));
             }
         }
         else {
-            Toast.makeText(this,"no journeys found",LENGTH_LONG).show();
+            Toast.makeText(this,getString(R.string.no_journeys_found),LENGTH_LONG).show();
         }
     }
 
@@ -741,7 +747,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 Drawable drawable = getDrawable(R.drawable.ic_marker);
                 //Vector Drawable to Bitmap
                 Bitmap icon = com.example.alex.capstone.utils.ResourceUtils.getBitmap((VectorDrawable) drawable);
-
                 Marker marker = mGoogleMap.addMarker(new MarkerOptions().
                         position(latLng)
                         .icon(BitmapDescriptorFactory.fromBitmap(icon)));
@@ -755,8 +760,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     private boolean moveCamera(LatLng latLng){
-        /* In some cases the map view has not being loaded angd there is an exception.
-        to avoid this we pass the dimensions of the map screnn*/
+        /* In some cases the map view has not being loaded and there is an exception.
+        to avoid this we pass the dimensions of the map screen*/
         int width = getResources().getDisplayMetrics().widthPixels;
         int height = getResources().getDisplayMetrics().heightPixels;
         int padding = (int) (width * 0.12); // offset from edges of the map 12% of screen
@@ -768,7 +773,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         }
         else {
-            Log.e(getString(R.string.map_act_move_camera),getString(R.string.lat_lng_null));
             return false;
         }
 
@@ -776,7 +780,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     /***
      * Method to load the information in the Info Window
-     * @param stopArea
+     * @param stopArea StopAre to show
      */
     private void showInfoWindow(StopArea stopArea) {
         mBottomBarV.setVisibility(View.GONE);
@@ -808,8 +812,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             LatLngBounds latLngBoundsOuterBox=mGoogleMap.getProjection().getVisibleRegion().latLngBounds;
             new GetNearbyStopsController(this,this).startGetNearbyStops(latLngBoundsOuterBox);
         }
-
-
     }
 
     /**
@@ -824,7 +826,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     /**
-     * clear polylines from map
+     * clear Polylines from map
      */
     private void clearPolyline(){
         if (mPolyLines != null && !mPolyLines.isEmpty()){
@@ -859,6 +861,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, GoogleSignInUtils.RC_SIGN_IN);
+        writeToPreferencesSkipLogIn(false);
     }
 
     private void signOut() {
@@ -866,10 +869,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 mIsUserLogged=false;
-                mMenuItemLog.setIcon(getResources().getDrawable(R.drawable.ic_person_black_24dp));
+                mMenuItemLog.setIcon(getResources().getDrawable(R.drawable.ic_person_black_24dp,null));
                 mMenuItemLog.setTitle(getString(R.string.log_in_menu_title));
+                showSnackBar(getString(R.string.log_out_succsesfull));
             }
         });
+        writeToPreferencesSkipLogIn(false);
+
     }
 
     private void manageFavorites(){
@@ -881,7 +887,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
 
             }else {
-                Log.e("DELETE FAILED","something went wrong deleting the favorite");
+                Log.e(MAP_ACTIVITY_TAG,getString(R.string.error_deleting_fav)+sqlCode);
 
             }
         }else {
@@ -894,7 +900,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     mIsFavorite=true;
                     mFavoriteId=returnedId;
                 }else {
-                    Log.e("INSERT FAILED","something went wrong inserting the favorite");
+                    Log.e(MAP_ACTIVITY_TAG,getString(R.string.insert_failed)+uri);
                 }
             }
         }
@@ -904,13 +910,16 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     }
 
+    /**
+     * start Favorites Activity
+     */
     private void goToFavorites(){
         Intent intent = new Intent(this,FavoritesActivity.class);
         startActivity(intent);
     }
 
     /**
-     * this method allow to find an favorite by ther lat and lng
+     * this method allow to find an favorite by their lat and lng
      * @param args lat and lng to find the favorite
      */
     private void queryAllByLatLngFavoritesDB(Bundle args) {
@@ -925,7 +934,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     /**
-     * This method allow to find a favorite by thier Id
+     * This method allow to find a favorite by their Id
      * @param args Only contains ID
      */
     private void getFavoriteById(Bundle args){
@@ -938,6 +947,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     }
 
+    /**
+     * Create the ContentValues to insert the favorite in the DB
+     * @return favorite content value
+     */
     private ContentValues createFavoriteContentValues() {
         ContentValues contentValues = new ContentValues();
         contentValues.put(FavoritesContract.favoritesEntry.COLUMN_LAT,mClickMarker.getPosition().latitude);
@@ -952,7 +965,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         if(object instanceof PhysicalStop) {
             PhysicalStop physicalStop= (PhysicalStop)object;
             contentValues.put(FavoritesContract.favoritesEntry.COLUMN_NAME,physicalStop.getName());
-            contentValues.put(FavoritesContract.favoritesEntry.COLUMN_CATEGORIE,getString(R.string.categorie_arret));
+            contentValues.put(FavoritesContract.favoritesEntry.COLUMN_CATEGORY,getString(R.string.category_arret));
         }
 
     }
@@ -960,12 +973,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private void changeIconColor(Boolean isFavorite){
         if (isFavorite){
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                mCenterAddFavoritesFAB.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorAccent,null)));
+                mCenterAddFavoritesFAB.setBackgroundTintList(
+                        ColorStateList.valueOf(getResources().getColor(R.color.colorAccent,null)));
             }
         }
         else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                mCenterAddFavoritesFAB.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.white,null)));
+                mCenterAddFavoritesFAB.setBackgroundTintList(
+                        ColorStateList.valueOf(getResources().getColor(R.color.white,null)));
             }
 
         }
@@ -1019,9 +1034,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 loader = new DbReadByLatLongNameAsyncTask(MapActivity.this,MAP_ACTIVITY_TAG,args);
                 break;
             case FAVORITE_READ_BY_ID_LOADER:
-                loader = new DbReadByIDAsyncTask(this,MAP_ACTIVITY_TAG,args.getInt(ID_TAG));
+                loader = new DbReadByIDAsyncTask(this,MAP_ACTIVITY_TAG,
+                        args != null ? args.getInt(ID_TAG) : 0);
                 break;
-            default: new UnsupportedOperationException("Unknown Loader");
+            default:
+                Log.e(MAP_ACTIVITY_TAG,getString(R.string.on_create_loader)+getString(R.string.unknown_loader)+id);
         }
 
         return loader;
@@ -1041,7 +1058,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 onLoadFinishedByID(list);
 
                 break;
-            default: new UnsupportedOperationException("Unknown Loader");
+            default:
+                Log.e(MAP_ACTIVITY_TAG,getString(R.string.on_load_finished)+getString(R.string.unknown_loader)+loader.getId());
 
         }
     }
@@ -1049,8 +1067,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         if (testSingleFavoriteArraySize(entryList)){
             LatLngBounds latLngBounds = MapUtils.calculateBoundingBox(RADIUS_METERS_ZOOM, mLatLngPosition);
             mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds, 0));
-            //getCallController.startGetStopSchedules();
-
         }
 
     }
@@ -1085,11 +1101,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
 
             try {
-                // Google Sign In was successful, authenticate with Firebase
+                // Google Sign In was successful, authenticate with FireBase
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 //Message Log in Successful
                 showSnackBar(getString(R.string.log_in_successful));
-                //Write to preferences the choice
+                mIsUserLogged=true;
 
 
             } catch (ApiException e) {
@@ -1103,9 +1119,22 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         }
     }
-        private void showSnackBar(String msg){
-            Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content),msg,Snackbar.LENGTH_LONG);
-            snackbar.show();
 
-        }
+    private void showSnackBar(String msg){
+        Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content),msg,Snackbar.LENGTH_LONG);
+        snackbar.show();
+    }
+
+    /**
+     * Method to save the choice
+     * @param b the choice made by the user
+     */
+    private void writeToPreferencesSkipLogIn(boolean b){
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putBoolean(getString(R.string.not_logged), b);
+        editor.apply();
+    }
+
+
 }

@@ -76,16 +76,16 @@ public class PhysicalStop implements Parcelable
     }
 
     /**
-     * 
-     * @param id
-     * @param handicappedCompliance
-     * @param destinations
-     * @param operatorCodes
-     * @param stopArea
-     * @param name
-     * @param lines
-     * @param y
-     * @param x
+     * Constructor
+     * @param id id
+     * @param handicappedCompliance handicappedCompliance
+     * @param destinations destinations
+     * @param operatorCodes operatorCodes
+     * @param stopArea stopArea
+     * @param name name
+     * @param lines lines
+     * @param y y
+     * @param x x
      */
     public PhysicalStop(List<Destination> destinations, String handicappedCompliance, String id, List<Line> lines, String name, List<OperatorCode> operatorCodes, StopArea stopArea, String x, String y) {
         super();

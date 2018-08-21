@@ -3,6 +3,7 @@ package com.example.alex.capstone.activities.favorites.adapters.recyclerview;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +22,6 @@ public class FavoritesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
     private final Context context;
 
     private List<Object> mDataSet;
-    private List<FavoriteEntry> favoriteEntries;
 
     public FavoritesRecyclerViewAdapter(Context c ) {
         context=c;
@@ -76,7 +76,7 @@ public class FavoritesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
                 break;
 
             default:
-                return;
+                Log.e(FavoritesRecyclerViewAdapter.class.getSimpleName(),context.getString(R.string.unsupported_viewholder)+holder.getItemViewType());
         }
     }
 
@@ -100,17 +100,16 @@ public class FavoritesRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
     public void setmDataSet(List<FavoriteEntry> favoriteEntries){
         if (favoriteEntries!=null && !favoriteEntries.isEmpty()){
             mDataSet=new ArrayList<>();
-            this.favoriteEntries=favoriteEntries;
             Label label = new Label();
             int i = 0;
 
             for(FavoriteEntry entry : favoriteEntries){
                 if (i==0) {
-                    label.setLabel(entry.getCategorie());
+                    label.setLabel(entry.getCategory());
                     mDataSet.add(label);
                 }
-                else if (!label.getLabel().equals(favoriteEntries.get(i).getCategorie())){
-                    label.setLabel(favoriteEntries.get(i).getCategorie());
+                else if (!label.getLabel().equals(favoriteEntries.get(i).getCategory())){
+                    label.setLabel(favoriteEntries.get(i).getCategory());
                     mDataSet.add(label);
                 }
                 mDataSet.add(entry);

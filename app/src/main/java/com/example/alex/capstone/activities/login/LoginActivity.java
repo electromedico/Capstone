@@ -32,7 +32,7 @@ public class LoginActivity extends AppCompatActivity{
 
 
 
-    private static final String TAG = "LOGIN";
+    private static final String TAG = LoginActivity.class.getSimpleName();
 
     //UI
     @BindView(R.id.not_now_button)
@@ -96,7 +96,7 @@ public class LoginActivity extends AppCompatActivity{
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
 
             try {
-                // Google Sign In was successful, authenticate with Firebase
+                // Google Sign In was successful, authenticate with FireBase
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 //Message Log in Successful
                 showSnackBar(getString(R.string.log_in_successful));
@@ -107,7 +107,7 @@ public class LoginActivity extends AppCompatActivity{
             } catch (ApiException e) {
                 // The ApiException status code indicates the detailed failure reason.
                 // Please refer to the GoogleSignInStatusCodes class reference for more information.
-                Log.w(TAG, getString(R.string.log_in_failed)+" code: " + e.getStatusCode());
+                Log.e(TAG, getString(R.string.log_in_failed)+" code: " + e.getStatusCode());
 
                 //Message Sign in Failed
                showSnackBar(getString(R.string.log_in_failed)+" "+ getString(R.string.please_try_again));

@@ -42,8 +42,8 @@ public class OperatorCode implements Parcelable
     }
 
     /**
-     * 
-     * @param operatorCode
+     * Constructor
+     * @param operatorCode Operator code
      */
     public OperatorCode(OperatorCode_ operatorCode) {
         super();

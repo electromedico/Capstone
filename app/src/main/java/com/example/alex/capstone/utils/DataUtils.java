@@ -20,8 +20,8 @@ public class DataUtils {
                 FavoriteEntry entry=new FavoriteEntry();
                 entry.setFavId(cursor.getInt(
                         cursor.getColumnIndex(FavoritesContract.favoritesEntry.COLUMN_ID)));
-                entry.setCategorie(cursor.getString(
-                        cursor.getColumnIndex(FavoritesContract.favoritesEntry.COLUMN_CATEGORIE)));
+                entry.setCategory(cursor.getString(
+                        cursor.getColumnIndex(FavoritesContract.favoritesEntry.COLUMN_CATEGORY)));
                 entry.setLat(cursor.getString(
                         cursor.getColumnIndex(FavoritesContract.favoritesEntry.COLUMN_LAT)));
                 entry.setLng(cursor.getString(
@@ -38,7 +38,7 @@ public class DataUtils {
 
     /**
      * for the query that should return only one element
-     * @param entryList list recupered by the query
+     * @param entryList list recuperated by the query
      * @return boolean true if single element
      */
     public static boolean testSingleFavoriteArraySize(List<FavoriteEntry> entryList){

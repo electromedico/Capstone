@@ -32,7 +32,7 @@ public class InfoWindowsRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         BusStopInfoViewHolder busStopInfoViewHolder= (BusStopInfoViewHolder) holder;
-        busStopInfoViewHolder.mlineNameTv.setText(mDataSet.get(position).getLine().getShortName());
+        busStopInfoViewHolder.mLineNameTv.setText(mDataSet.get(position).getLine().getShortName());
         busStopInfoViewHolder.mDirectionTv.setText(mDataSet.get(position).getDestination().getName());
         busStopInfoViewHolder.mNextPassageTv.setText(mDataSet.get(position).getJourneys().get(0).getWaitingTime());
 
@@ -51,23 +51,23 @@ public class InfoWindowsRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
 
 
     private class BusStopInfoViewHolder extends RecyclerView.ViewHolder{
-        private TextView mlineNameTv;
+        private TextView mLineNameTv;
         private TextView mDirectionTv;
         private TextView mNextPassageTv;
 
         BusStopInfoViewHolder(View itemView) {
             super(itemView);
-            mlineNameTv = itemView.findViewById(R.id.line_name_tv_bus_stop_info);
+            mLineNameTv = itemView.findViewById(R.id.line_name_tv_bus_stop_info);
             mDirectionTv = itemView.findViewById(R.id.direction_tv_bus_stop_info);
             mNextPassageTv = itemView.findViewById(R.id.next_passage_tv_bus_stop_info);
         }
 
-        public TextView getMlineNameTv() {
-            return mlineNameTv;
+        public TextView getmLineNameTv() {
+            return mLineNameTv;
         }
 
-        public void setMlineNameTv(TextView mlineNameTv) {
-            this.mlineNameTv = mlineNameTv;
+        public void setmLineNameTv(TextView mLineNameTv) {
+            this.mLineNameTv = mLineNameTv;
         }
 
         public TextView getmDirectionTv() {

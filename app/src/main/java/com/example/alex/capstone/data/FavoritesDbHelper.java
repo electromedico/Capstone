@@ -21,7 +21,7 @@ class FavoritesDbHelper extends SQLiteOpenHelper {
                 FavoritesContract.favoritesEntry.COLUMN_LAT + " STRING not null, "+
                 FavoritesContract.favoritesEntry.COLUMN_LNG + " STRING not null, " +
                 FavoritesContract.favoritesEntry.COLUMN_NAME + " STRING not null, " +
-                FavoritesContract.favoritesEntry.COLUMN_CATEGORIE + " STRING not null, " +
+                FavoritesContract.favoritesEntry.COLUMN_CATEGORY + " STRING not null, " +
                 FavoritesContract.favoritesEntry.COLUMN_TIMESTAMP + " TIMESTAMP DEFAULT CURRENT_TIMESTAMP" +
                 ");";
         db.execSQL(SQL_CREATE_FAVORITES);

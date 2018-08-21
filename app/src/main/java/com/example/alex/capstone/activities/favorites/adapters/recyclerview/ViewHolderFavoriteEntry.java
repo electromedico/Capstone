@@ -10,7 +10,7 @@ import com.example.alex.capstone.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class ViewHolderFavoriteEntry extends RecyclerView.ViewHolder implements View.OnClickListener {
+class ViewHolderFavoriteEntry extends RecyclerView.ViewHolder implements View.OnClickListener {
     @BindView(R.id.rv_favorite_entry)
     TextView mFavoriteEntryTv;
     @BindView(R.id.rv_favorite_entry_container)
@@ -43,7 +43,7 @@ public class ViewHolderFavoriteEntry extends RecyclerView.ViewHolder implements 
         this.mFavoriteEntryTv = mFavoriteEntryTv;
     }
 
-    public String get_id() {
+    private String get_id() {
         return _id;
     }
 

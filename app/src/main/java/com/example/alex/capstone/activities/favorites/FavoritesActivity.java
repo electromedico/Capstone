@@ -5,8 +5,6 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
@@ -15,7 +13,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import com.example.alex.capstone.R;
@@ -25,12 +22,10 @@ import com.example.alex.capstone.activities.map.MapActivity;
 import com.example.alex.capstone.data.FavoriteEntry;
 import com.example.alex.capstone.data.dataUtils.DbReadAllAsyncTask;
 import com.example.alex.capstone.widget.UpdateWidgetService;
-import com.google.android.gms.common.server.BaseApi;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.example.alex.capstone.data.dataUtils.DbUtils.deleteFavoriteQuery;
 import static com.example.alex.capstone.utils.DataUtils.cursorToEntryList;
@@ -121,6 +116,7 @@ public class FavoritesActivity extends AppCompatActivity implements LoaderManage
     private long deleteFavorite(long id){
         return deleteFavoriteQuery(this,id);
     }
+
     @NonNull
     @Override
     public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
@@ -128,7 +124,9 @@ public class FavoritesActivity extends AppCompatActivity implements LoaderManage
         switch (id){
             case FAVORITE_READ_LOADER:
                 loader = new DbReadAllAsyncTask(this,FAVORITES_ACTIVITY_TAG);
-            default: new UnsupportedOperationException("Unknown Loader");
+            default: Log.e(FAVORITES_ACTIVITY_TAG,getString(R.string.on_create_loader)
+                    +getString(R.string.unknown_loader)
+                    + id);
         }
         return loader;
     }
@@ -146,7 +144,9 @@ public class FavoritesActivity extends AppCompatActivity implements LoaderManage
                     addFavoritesToHashMap(list);
                 break;
 
-            default: new UnsupportedOperationException("Unknown Loader");
+            default: Log.e(FAVORITES_ACTIVITY_TAG,getString(R.string.on_load_finished)
+                    +getString(R.string.unknown_loader)
+                    +loader.getId());
 
         }
     }

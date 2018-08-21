@@ -8,7 +8,7 @@ public class LocationUtils {
 
     /**
      * Transform location into LatLang
-     * @param location
+     * @param location location
      * @return Location in LatLang format
      */
     public static LatLng locationToLatLong (Location location){

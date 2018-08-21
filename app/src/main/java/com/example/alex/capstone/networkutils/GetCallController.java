@@ -1,6 +1,7 @@
 package com.example.alex.capstone.networkutils;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import com.example.alex.capstone.R;
 import com.example.alex.capstone.model.GetPlacesQuery;
@@ -127,32 +128,37 @@ public class GetCallController implements Callback<ResponseBody> {
     }
 
     @Override
-    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+    public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
         //test response
         if (response.isSuccessful()) {
             try {
-                switch (serviceCalled){
+                if (response.body()!=null){
+                    String responseBody=response.body().string();
+                    switch (serviceCalled){
 
-                    case GET_NEARBY_STOPS_TAG:
-                        getStopPointsQueryTreatment(response.body().string());
-                        break;
+                        case GET_NEARBY_STOPS_TAG:
+                            getStopPointsQueryTreatment(responseBody);
+                            break;
 
-                    case GET_STOP_SCHEDULES_TAG:
-                        getStopSchedulesTreatment(response.body().string());
-                        break;
+                        case GET_STOP_SCHEDULES_TAG:
+                            getStopSchedulesTreatment(responseBody);
+                            break;
 
-                    case GET_PLACES_TAG:
-                        getPlacesTreatment(response.body().string());
-                        break;
+                        case GET_PLACES_TAG:
+                            getPlacesTreatment(responseBody);
+                            break;
 
-                    case GET_JOURNEYS_TAG:
-                        getJourneysTreatment(response.body().string());
-                    default:
-                        break;
+                        case GET_JOURNEYS_TAG:
+                            getJourneysTreatment(responseBody);
+                        default:
+                            break;
 
+                    }
                 }
+
+                else  throw new  IOException(context.getString(R.string.on_response_response_body_null));
             } catch (IOException e) {
-                Log.d(context.getString(R.string.retrofit_on_response_log_tag), e.getMessage());
+                Log.e(context.getString(R.string.retrofit_on_response_log_tag), e.getMessage());
             }
 
 
@@ -169,7 +175,7 @@ public class GetCallController implements Callback<ResponseBody> {
             listener.onTaskCompletedGetJourneys(getJourneysQuery.getRoutePlannerResult().getJourneys());
         }
         else {
-            throw (new IOException(context.getString(R.string.on_response_excepion)));
+            throw (new IOException(context.getString(R.string.on_response_exception)));
         }
 
     }
@@ -183,7 +189,7 @@ public class GetCallController implements Callback<ResponseBody> {
             listener.onTaskCompletedGetPlaces(getPlacesQuery.getPlacesList());
         }
         else {
-            throw (new IOException(context.getString(R.string.on_response_excepion)));
+            throw (new IOException(context.getString(R.string.on_response_exception)));
         }
     }
 
@@ -199,7 +205,7 @@ public class GetCallController implements Callback<ResponseBody> {
             listener.onTaskCompletedGetNearbyStops(getStopPointsQuery.getPhysicalStops());
         }
         else {
-            throw (new IOException(context.getString(R.string.on_response_excepion)));
+            throw (new IOException(context.getString(R.string.on_response_exception)));
         }
 
     }
@@ -209,18 +215,18 @@ public class GetCallController implements Callback<ResponseBody> {
 
         //Response content verification
         if (getStopSchedulesQuery!= null && getStopSchedulesQuery.getDepartures() != null) {
-            //we pass to the listner the list of stops
+            //we pass to the listener the list of stops
             listener.onTaskCompletedGetStopSchedules(getStopSchedulesQuery.getDepartures());
         }
         else {
-            throw (new IOException(context.getString(R.string.on_response_excepion)));
+            throw (new IOException(context.getString(R.string.on_response_exception)));
         }
 
     }
 
     @Override
-    public void onFailure(Call<ResponseBody> call, Throwable t) {
-        Log.d(context.getString(R.string.retrofit_on_failure_log_tag), t.getMessage());
+    public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+        Log.e(context.getString(R.string.retrofit_on_failure_log_tag), t.getMessage());
 
     }
 }

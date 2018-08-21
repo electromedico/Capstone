@@ -11,7 +11,8 @@
     android:paddingEnd="@dimen/_search_bar_padding"
     android:elevation="@dimen/dp8"
     android:clickable="true"
-    tools:showIn="@layout/map_frame_layout">
+    tools:showIn="@layout/map_frame_layout"
+    android:focusable="true">
 
     <ImageButton
         android:layout_width="wrap_content"

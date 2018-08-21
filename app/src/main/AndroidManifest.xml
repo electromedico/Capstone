@@ -15,6 +15,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity
             android:name=".activities.MainActivity"
             android:screenOrientation="portrait">
@@ -24,24 +25,29 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".activities.login.LoginActivity"
             android:label="@string/title_activity_login"
             android:screenOrientation="portrait" />
 
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
-
         <activity
             android:name=".activities.map.MapActivity"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".activities.about.AboutActivity"
             android:label="@string/title_activity_about"
+            android:parentActivityName=".activities.map.MapActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.alex.capstone.activities.map.MapActivity" />
+        </activity>
+
+        <activity
+            android:name=".activities.favorites.FavoritesActivity"
+            android:label="@string/title_activity_favorites"
             android:parentActivityName=".activities.map.MapActivity"
             android:theme="@style/AppTheme">
             <meta-data
@@ -69,15 +75,14 @@
             android:permission="android.permission.BIND_REMOTEVIEWS" />
         <service android:name=".widget.UpdateWidgetService" />
 
-        <activity
-            android:name=".activities.favorites.FavoritesActivity"
-            android:label="@string/title_activity_favorites"
-            android:parentActivityName=".activities.map.MapActivity"
-            android:theme="@style/AppTheme">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.alex.capstone.activities.map.MapActivity" />
-        </activity>
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+
     </application>
 
 </manifest>

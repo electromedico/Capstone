@@ -23,7 +23,7 @@ public class DbUtils {
     /**
      * Add a new Favorite
      * @return Uri
-     * @param context
+     * @param context context
      */
     public static Uri addFavoriteQuery(Context context, ContentValues contentValues) {
         return context.getContentResolver().insert(

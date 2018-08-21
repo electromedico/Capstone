@@ -94,21 +94,21 @@ public class Place implements Parcelable
     }
 
     /**
-     * 
-     * @param cityName
-     * @param label
-     * @param type
-     * @param postcode
-     * @param network
-     * @param typeCompressed
-     * @param id
-     * @param category
-     * @param rank
-     * @param address
-     * @param className
-     * @param key
-     * @param y
-     * @param x
+     * Constructor
+     * @param cityName cityName
+     * @param label label
+     * @param type type
+     * @param postcode postcode
+     * @param network network
+     * @param typeCompressed typeCompressed
+     * @param id id
+     * @param category category
+     * @param rank rank
+     * @param address address
+     * @param className className
+     * @param key key
+     * @param y y
+     * @param x x
      */
     public Place(String category, String className, String id, String key, String label, String network, String rank, String x, String y, String address, String cityName, String postcode, String type, String typeCompressed) {
         super();

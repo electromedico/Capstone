@@ -11,7 +11,7 @@ import com.example.alex.capstone.R;
 
 public class UpdateWidgetService extends IntentService {
 
-    public static final String ACTION_UPDATE_FAVORITES_WIDGETS = "com.example.android.capstopne.action.update_widgets";
+    private static final String ACTION_UPDATE_FAVORITES_WIDGETS = "com.example.android.capstopne.action.update_widgets";
 
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
@@ -36,7 +36,7 @@ public class UpdateWidgetService extends IntentService {
      * the service is already performing a task this action will be queued.
      *
      * @see IntentService
-     * @param context
+     * @param context this
      */
     public static void startActionUpdatePlantWidgets(Context context) {
         Intent intent = new Intent(context, UpdateWidgetService.class);

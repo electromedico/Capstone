@@ -44,8 +44,8 @@ public class PhysicalStops implements Parcelable
     }
 
     /**
-     * 
-     * @param physicalStop
+     * Constructor
+     * @param physicalStop List of PhysicalStop
      */
     public PhysicalStops(List<PhysicalStop> physicalStop) {
         super();

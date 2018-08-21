@@ -19,7 +19,7 @@ public class ExampleUnitTest {
     }
 
     @Test
-    public void calculateBondingBox_iscorrect() {
+    public void calculateBondingBox_isCorrect() {
         LatLng l1 = new LatLng(1.457652,43.630826);
         LatLngBounds latLngBounds = MapUtils.calculateBoundingBox(RADIUS_METERS_ZOOM,l1);
         assert true;

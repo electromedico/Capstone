@@ -1,6 +1,7 @@
 package com.example.alex.capstone.networkutils.callControlers;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.example.alex.capstone.R;
@@ -68,7 +69,7 @@ public class GetNearbyStopsController implements Callback<GetStopPointsQuery>{
 
 
     @Override
-    public void onResponse(Call<GetStopPointsQuery> call, Response<GetStopPointsQuery> response) {
+    public void onResponse(@NonNull Call<GetStopPointsQuery> call, @NonNull Response<GetStopPointsQuery> response) {
         //test response
         if (response.isSuccessful()) {
             GetStopPointsQuery getStopPointsQuery = response.body();
@@ -80,13 +81,13 @@ public class GetNearbyStopsController implements Callback<GetStopPointsQuery>{
             }
             else {
 
-                Log.e(context.getString(R.string.on_response_retrofit_nearby_stops),context.getString(R.string.on_response_excepion));
+                Log.e(context.getString(R.string.on_response_retrofit_nearby_stops),context.getString(R.string.on_response_exception));
             }
         }
     }
 
     @Override
-    public void onFailure(Call<GetStopPointsQuery> call, Throwable t) {
+    public void onFailure(@NonNull Call<GetStopPointsQuery> call, @NonNull Throwable t) {
 
         Log.d(context.getString(R.string.on_response_retrofit_nearby_stops), t.getMessage());
 

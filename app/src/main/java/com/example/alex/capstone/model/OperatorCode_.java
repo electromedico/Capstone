@@ -46,9 +46,9 @@ public class OperatorCode_ implements Parcelable
     }
 
     /**
-     * 
-     * @param value
-     * @param network
+     * Constructor
+     * @param value value
+     * @param network network
      */
     public OperatorCode_(String network, String value) {
         super();

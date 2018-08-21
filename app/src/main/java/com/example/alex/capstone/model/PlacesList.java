@@ -44,8 +44,8 @@ public class PlacesList implements Parcelable
     }
 
     /**
-     * 
-     * @param place
+     * Constructor
+     * @param place place
      */
     public PlacesList(List<Place> place) {
         super();

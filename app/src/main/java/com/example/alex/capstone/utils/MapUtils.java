@@ -18,8 +18,7 @@ public class MapUtils {
 
     public static final double RADIUS_METERS_ZOOM =250;
 
-    public static final String WKT_REGEX_STRING = "((((MULTI)?(POINT|LINESTRING|POLYGON)|GEOMETRYCOLLECTION)Z?M?)[\\s]*[(].*[)])";
-    private static final String WKT_PREGEX_LINE_STRING_REGEX ="\\((.*?)\\)";
+    private static final String WKT_REGEX_LINE_STRING_REGEX ="\\((.*?)\\)";
     private static final String WKT_COMA_SPACE_STRING_REGEX =",\\s";
     private static final String REGEX_LINE_STRING = "LINESTRING";
     private static final String REGEX_MULTILINE_STRING = "MULTILINESTRING";
@@ -50,7 +49,7 @@ public class MapUtils {
             String[] s = wtk.split(REGEX_LINE_STRING);
             String extractedText = s[1];
             //extract the coordinates
-            Pattern pattern = Pattern.compile(WKT_PREGEX_LINE_STRING_REGEX);
+            Pattern pattern = Pattern.compile(WKT_REGEX_LINE_STRING_REGEX);
             Matcher matcher = pattern.matcher(extractedText);
             if (matcher.find()){
                 String l = matcher.group(1);

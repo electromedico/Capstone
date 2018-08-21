@@ -46,9 +46,9 @@ public class GetStopPointsQuery implements Parcelable
     }
 
     /**
-     * 
-     * @param expirationDate
-     * @param physicalStops
+     * Constructor
+     * @param expirationDate Expiration date sent by the API
+     * @param physicalStops List of Physical Stops
      */
     public GetStopPointsQuery(String expirationDate, PhysicalStops physicalStops) {
         super();
