@@ -2,6 +2,7 @@ package com.example.alex.capstone.activities.map;
 
 import android.Manifest;
 
+import android.app.ActivityOptions;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.DialogInterface;
@@ -13,6 +14,7 @@ import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.VectorDrawable;
 import android.location.Location;
@@ -82,6 +84,7 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -166,6 +169,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private LocationRequest mLocationRequest;
     private InfoWindowsRecyclerViewAdapter recyclerViewAdapter;
     private GoogleSignInClient mGoogleSignInClient;
+    private StopArea mStopArea;
 
 
     @BindView(R.id.favorites_image_button)
@@ -200,6 +204,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     TextView mNavUserNameTv;
     Menu mMenu;
     MenuItem mMenuItemLog;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -256,7 +261,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         ///check for who launched the activity
         Bundle intentExtras = getIntent().getExtras();
         if (intentExtras != null) {
-            Gson gson = new Gson();
+           Gson gson = new Gson();
             if (intentExtras.containsKey(WIDGET_ID_KEY)) {
                 mCalledByFavorites = true;
                 favoriteEntry = gson.fromJson(intentExtras.getString(getString(R.string.favorite_json_key)), FavoriteEntry.class);
@@ -307,6 +312,39 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     protected void onResume() {
         super.onResume();
         startLocationUpdates();
+        //true if onRestoreInstanceState contains mPhysicalStop
+        if (mPhysicalStop!=null){
+            showInfoWindow(mStopArea);
+        }
+
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(getString(R.string.camera_key), mGoogleMap.getCameraPosition());
+        outState.putParcelable(getString(R.string.physical_stop_key),mPhysicalStop);
+        outState.putParcelable(getString(R.string.stop_area_key),mStopArea);
+
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if(savedInstanceState==null) return;
+
+        if (savedInstanceState.containsKey(getString(R.string.camera_key))) {
+            cameraPosition = savedInstanceState.getParcelable(getString(R.string.camera_key));
+        }
+        if (savedInstanceState.containsKey(getString(R.string.physical_stop_key))) {
+            mPhysicalStop = savedInstanceState.getParcelable(getString(R.string.physical_stop_key));
+            mSelectedStopAreaID=mPhysicalStop.getId();
+
+        }
+        if (savedInstanceState.containsKey(getString(R.string.stop_area_key))) {
+            mStopArea = savedInstanceState.getParcelable(getString(R.string.stop_area_key));
+
+        }
     }
 
     /**
@@ -525,7 +563,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         enableGoogleMapMyLocation();
 
         //If the activity was called by the widget we focus the favorite location instead
-        if (mCalledByFavorites) {
+        if (cameraPosition!=null){
+            mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        }
+        else if (mCalledByFavorites) {
             moveCamera(favoriteEntry.getLatLng());
             //Only used for on create
             mCalledByFavorites = false;
@@ -547,12 +588,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putParcelable(getString(R.string.camera_key), mGoogleMap.getCameraPosition());
 
-    }
 
     private void getLastLocation() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -570,13 +606,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         });
     }
 
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        if (savedInstanceState != null && savedInstanceState.containsKey(getString(R.string.camera_key))) {
-            cameraPosition = savedInstanceState.getParcelable(getString(R.string.camera_key));
-        }
-    }
 
     @Override
     public void onTaskCompletedGetNearbyStops(PhysicalStops physicalStops) {
@@ -592,6 +621,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             for (StopArea stopArea : stopAreas) {
                 if (stopArea != null && stopArea.getUniqueStopId().equals(mSelectedStopAreaID)) {
                     showInfoWindow(stopArea);
+                    mStopArea=stopArea;
                 }
             }
         }
@@ -752,6 +782,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         .icon(BitmapDescriptorFactory.fromBitmap(icon)));
                 marker.setTag(physicalStop);
                 mStopMarkers.add(marker);
+                //Only true if onRestoreInstanceState contains mPhysicalStop
+                if (mPhysicalStop!=null &&mPhysicalStop.getId().equals(physicalStop.getId())){
+                    mClickMarker=marker;
+                }
             }
         } else {
             Toast.makeText(this, getString(R.string.no_stops), LENGTH_LONG).show();
@@ -795,6 +829,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
      */
     private void hideInfoWindow(){
         mClickMarker=null;
+        mPhysicalStop=null;
         mBottomBarV.setVisibility(View.VISIBLE);
         mInfoWindowV.setVisibility(View.GONE);
         mCenterAddFavoritesFAB.setVisibility(View.GONE);
@@ -805,7 +840,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     public void onCameraIdle() {
 
         clearStopMarkers();
-        if (mGoogleMap.getCameraPosition().zoom > Float.parseFloat(getString(R.string.map_zoom_level))){
+        float zoomValue = Float.parseFloat(getString(R.string.map_zoom_level));
+        float mapzoom = mGoogleMap.getCameraPosition().zoom;
+        if (mGoogleMap.getCameraPosition().zoom >zoomValue){
             mProgressBar.setVisibility(View.VISIBLE);
             //call the service to get all the stop zones
             cameraPosition=mGoogleMap.getCameraPosition();
@@ -915,7 +952,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
      */
     private void goToFavorites(){
         Intent intent = new Intent(this,FavoritesActivity.class);
-        startActivity(intent);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(this).toBundle();
+            startActivity(intent, bundle);
+        } else {
+            startActivity(intent);
+        }
     }
 
     /**

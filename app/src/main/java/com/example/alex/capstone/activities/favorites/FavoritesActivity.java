@@ -2,6 +2,7 @@ package com.example.alex.capstone.activities.favorites;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,6 +13,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.transition.Slide;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -78,7 +80,16 @@ public class FavoritesActivity extends AppCompatActivity implements LoaderManage
 
             }
         }).attachToRecyclerView(mRecyclerView);
+
+
+        if(Build.VERSION.SDK_INT >= 21){
+            Slide slide = new Slide();
+            slide.setDuration(300);
+            getWindow().setEnterTransition(slide);
+            getWindow().setExitTransition(slide);
+        }
     }
+
 
     /**
      * Method to handle the case where the user has not yet added favorites

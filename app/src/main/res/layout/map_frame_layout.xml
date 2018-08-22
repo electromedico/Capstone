@@ -20,7 +20,8 @@
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        android:visibility="gone"/>
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
@@ -35,6 +36,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/center_location_fab"
             android:src="@drawable/ic_my_location_black_24dp"
+            android:contentDescription="@string/desc_center_position_fab"
             android:elevation="@dimen/dp8"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -49,6 +51,7 @@
             android:layout_marginTop="8dp"
             android:elevation="@dimen/dp8"
             android:src="@drawable/ic_star_black_24dp"
+            android:contentDescription="@string/desc_add_favorite_fab"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/center_location_fab"
             android:visibility="gone"/>

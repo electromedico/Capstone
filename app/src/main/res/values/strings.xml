@@ -138,6 +138,11 @@
     <!--Generic Toast Messages-->
     <string name="something_went_wrong">Ops something went wrong!</string>
     <string name="log_out_succsesfull">Log out Sucsessfulll</string>
+    <string name="desc_center_position_fab">Center Position FAB</string>
+    <string name="desc_add_favorite_fab">Add Favorite FAB</string>
+    <string name="physical_stop_key">physical_stop_key</string>
+    <string name="marker_key">marker_key</string>
+    <string name="stop_area_key">stop_area_key</string>
 
 
 </resources>
