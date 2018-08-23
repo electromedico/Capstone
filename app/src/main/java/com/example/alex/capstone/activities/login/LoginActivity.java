@@ -97,7 +97,9 @@ public class LoginActivity extends AppCompatActivity{
 
             try {
                 // Google Sign In was successful, authenticate with FireBase
-                GoogleSignInAccount account = task.getResult(ApiException.class);
+                //to be used in a later implementation
+                //GoogleSignInAccount account = task.getResult(ApiException.class);
+                task.getResult(ApiException.class);
                 //Message Log in Successful
                 showSnackBar(getString(R.string.log_in_successful));
                 //Write to preferences the choice

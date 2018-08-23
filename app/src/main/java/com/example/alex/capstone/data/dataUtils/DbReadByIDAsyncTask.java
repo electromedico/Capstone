@@ -17,6 +17,7 @@ public class DbReadByIDAsyncTask extends AsyncTaskLoader<Cursor> {
     public DbReadByIDAsyncTask(@NonNull Context context, String tag, int id) {
         super(context);
         TAG=tag;
+        this.id=id;
     }
 
     @Nullable

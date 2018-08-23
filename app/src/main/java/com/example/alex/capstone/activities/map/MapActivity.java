@@ -14,7 +14,6 @@ import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.VectorDrawable;
 import android.location.Location;
@@ -84,7 +83,6 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -338,7 +336,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
         if (savedInstanceState.containsKey(getString(R.string.physical_stop_key))) {
             mPhysicalStop = savedInstanceState.getParcelable(getString(R.string.physical_stop_key));
-            mSelectedStopAreaID=mPhysicalStop.getId();
+            if (mPhysicalStop!= null)mSelectedStopAreaID=mPhysicalStop.getId();
 
         }
         if (savedInstanceState.containsKey(getString(R.string.stop_area_key))) {
@@ -748,6 +746,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     }
 
+    /**
+     * No yet implemented
+     * @param stop
+     */
     private void loadStopInfoIntoMap(Stop stop) {
     }
 
@@ -841,7 +843,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         clearStopMarkers();
         float zoomValue = Float.parseFloat(getString(R.string.map_zoom_level));
-        float mapzoom = mGoogleMap.getCameraPosition().zoom;
         if (mGoogleMap.getCameraPosition().zoom >zoomValue){
             mProgressBar.setVisibility(View.VISIBLE);
             //call the service to get all the stop zones
@@ -898,7 +899,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, GoogleSignInUtils.RC_SIGN_IN);
-        writeToPreferencesSkipLogIn(false);
+        writeToPreferencesSkipLogIn();
     }
 
     private void signOut() {
@@ -911,7 +912,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 showSnackBar(getString(R.string.log_out_succsesfull));
             }
         });
-        writeToPreferencesSkipLogIn(false);
+        writeToPreferencesSkipLogIn();
 
     }
 
@@ -976,6 +977,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     /**
+     * Not yet implemented
      * This method allow to find a favorite by their Id
      * @param args Only contains ID
      */
@@ -1169,12 +1171,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     /**
      * Method to save the choice
-     * @param b the choice made by the user
      */
-    private void writeToPreferencesSkipLogIn(boolean b){
+    private void writeToPreferencesSkipLogIn(){
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putBoolean(getString(R.string.not_logged), b);
+        editor.putBoolean(getString(R.string.not_logged), false);
         editor.apply();
     }
 

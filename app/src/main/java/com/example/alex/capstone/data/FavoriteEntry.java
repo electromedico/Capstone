@@ -19,7 +19,7 @@ public class FavoriteEntry {
     }
 
     public LatLng getLatLng(){
-        if (lat!=null && lng !=null){
+        if (getLat()!=null && getLng() !=null){
             return new LatLng(Double.valueOf(lat),
                     Double.valueOf(lng));
         }

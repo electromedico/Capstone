@@ -23,7 +23,6 @@ public class InfoWindowsRecyclerViewAdapter extends RecyclerView.Adapter<Recycle
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        RecyclerView.ViewHolder viewHolder;
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(R.layout.rv_infowindow_bus_stop_layout, parent, false);
         return new BusStopInfoViewHolder(view);
