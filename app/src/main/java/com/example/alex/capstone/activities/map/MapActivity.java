@@ -70,6 +70,7 @@ import com.example.alex.capstone.model.getJourneysQueryModel.Street;
 import com.example.alex.capstone.networkutils.GetCallController;
 import com.example.alex.capstone.networkutils.OnTaskCompleted;
 import com.example.alex.capstone.networkutils.callControlers.GetNearbyStopsController;
+import com.example.alex.capstone.networkutils.callControlers.GetStopSchedulesController;
 import com.example.alex.capstone.utils.GoogleSignInUtils;
 import com.example.alex.capstone.utils.LocationUtils;
 import com.example.alex.capstone.utils.MapUtils;
@@ -160,6 +161,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private boolean mIsFavorite = false;
     private boolean mCalledByFavorites = false;
     private boolean mIsUserLogged=false;
+    private boolean mOnRestoreInstanceState=false;
     private PhysicalStop mPhysicalStop;
     private long mFavoriteId = -1;
     private FavoriteEntry favoriteEntry;
@@ -343,6 +345,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             mStopArea = savedInstanceState.getParcelable(getString(R.string.stop_area_key));
 
         }
+        mOnRestoreInstanceState=true;
     }
 
     /**
@@ -514,17 +517,17 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
 
             public boolean onMarkerClick(Marker marker) {
-
+                mMarkerInfoMap.clear();
                 if (marker.getTag() instanceof PhysicalStop) {
                     mProgressBar.setVisibility(View.VISIBLE);
                     if (mClickMarker != null) mClickMarker.remove();
                     mClickMarker = marker;
-                    //we are having problems storing the object in the Marker.setTAg, we use instead a Map
-                    mMarkerInfoMap.put(marker.getId(), marker.getTag());
                     mPhysicalStop = (PhysicalStop) marker.getTag();
+                    //we are having problems storing the object in the Marker.setTAg, we use instead a Map
+                    mMarkerInfoMap.put(marker.getId(),mPhysicalStop );
                     mSelectedStopAreaID = mPhysicalStop.getId();
                     //We call the service to get the Schedules
-                    getCallController.startGetStopSchedules(mPhysicalStop.getId());
+                    new GetStopSchedulesController(MapActivity.this,MapActivity.this).startGetStopSchedulesById(mPhysicalStop.getId());
                     // we call the AsyncTask to query the favorites DB
                     Bundle args = new Bundle();
                     args.putString(LAT_TAG, String.valueOf(marker.getPosition().latitude));
@@ -560,14 +563,16 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         //Enable user location Marker
         enableGoogleMapMyLocation();
 
-        //If the activity was called by the widget we focus the favorite location instead
+        //True on restoreInstanceState
         if (cameraPosition!=null){
             mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         }
+        //If the activity was called by the a favorite we focus the favorite location instead
         else if (mCalledByFavorites) {
             moveCamera(favoriteEntry.getLatLng());
-            //Only used for on create
-            mCalledByFavorites = false;
+            //Only used onCreate
+            mCalledByFavorites=false;
+
         } else {
             if (!moveCamera(mLatLngPosition))getLastLocation();
 
@@ -785,8 +790,16 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 marker.setTag(physicalStop);
                 mStopMarkers.add(marker);
                 //Only true if onRestoreInstanceState contains mPhysicalStop
-                if (mPhysicalStop!=null &&mPhysicalStop.getId().equals(physicalStop.getId())){
+                if (mOnRestoreInstanceState &&
+                        mPhysicalStop!=null &&
+                        mPhysicalStop.getId().equals(physicalStop.getId())){
                     mClickMarker=marker;
+                }
+                //Only true if the activity was launched by clicking in favorites
+                if(favoriteEntry!=null &&
+                        physicalStop.getY().equals(favoriteEntry.getLng())
+                        && physicalStop.getX().equals(favoriteEntry.getLat())){
+                    new GetStopSchedulesController(this,this).startGetStopSchedulesById(physicalStop.getId());
                 }
             }
         } else {
@@ -1100,8 +1113,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
             case FAVORITE_READ_BY_ID_LOADER:
                 onLoadFinishedByID(list);
-
                 break;
+
             default:
                 Log.e(MAP_ACTIVITY_TAG,getString(R.string.on_load_finished)+getString(R.string.unknown_loader)+loader.getId());
 

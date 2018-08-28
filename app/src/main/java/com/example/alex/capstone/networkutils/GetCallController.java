@@ -48,26 +48,7 @@ public class GetCallController implements Callback<ResponseBody> {
     }
 
 
-    public void startGetStopSchedules(String stopPointId){
 
-        serviceCalled= GET_STOP_SCHEDULES_TAG;
-
-        //Map for the query parameters
-        Map<String,String> parameters = new HashMap<>();
-
-        //Display coordinates
-        parameters.put(context.getString(R.string.stop_point_id),
-                stopPointId);
-
-        parameters.put(context.getString(R.string.time_table_by_area),context.getString(R.string.param_time_table_by_area));
-
-        //Api Key parameter
-        parameters.put(context.getString(R.string.api_key_param), apiKey);
-
-        //Cal the get method
-        Call<ResponseBody> call = tisseoAPI.getStopSchedule(parameters);
-        call.enqueue(this);
-    }
 
     public void startGetJourneys(LatLng arrival, LatLng departure){
         serviceCalled= GET_JOURNEYS_TAG;

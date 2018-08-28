@@ -1,6 +1,7 @@
 package com.example.alex.capstone.networkutils;
 
 import com.example.alex.capstone.model.GetStopPointsQuery;
+import com.example.alex.capstone.model.GetStopSchedulesQuery;
 
 import java.util.Map;
 
@@ -20,7 +21,7 @@ public interface TisseoAPI {
     Call<GetStopPointsQuery> getNearbyStops(@QueryMap Map<String,String> options);
 
     @GET(STOP_SCHEDULES_PATH)
-    Call<ResponseBody> getStopSchedule(@QueryMap Map<String,String> options);
+    Call<GetStopSchedulesQuery> getStopSchedule(@QueryMap Map<String,String> options);
 
     @GET(JOURNEYS_PATH)
     Call<ResponseBody> getJourney(@QueryMap Map<String,String> options);

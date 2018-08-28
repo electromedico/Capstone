@@ -135,6 +135,7 @@ public class FavoritesActivity extends AppCompatActivity implements LoaderManage
         switch (id){
             case FAVORITE_READ_LOADER:
                 loader = new DbReadAllAsyncTask(this,FAVORITES_ACTIVITY_TAG);
+                break;
             default: Log.e(FAVORITES_ACTIVITY_TAG,getString(R.string.on_create_loader)
                     +getString(R.string.unknown_loader)
                     + id);
