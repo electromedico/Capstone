@@ -11,7 +11,7 @@ import com.example.alex.capstone.R;
 
 public class UpdateWidgetService extends IntentService {
 
-    private static final String ACTION_UPDATE_FAVORITES_WIDGETS = "com.example.android.capstopne.action.update_widgets";
+    public static final String ACTION_UPDATE_FAVORITES_WIDGETS = "com.example.android.capstopne.action.update_widgets";
 
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
