@@ -34,4 +34,4 @@ App Implementation
 ![My image](img/bus_stop_info_window.jpeg)
 ![My image](img/favorites_activity.jpeg)
 ![My image](img/search.jpeg)
-![My image](img/Widget.jpeg)
+![My image](img/widget.jpeg)
